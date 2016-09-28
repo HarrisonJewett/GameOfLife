@@ -19,7 +19,7 @@ namespace MainGame
 
         Color gridColor = Color.AliceBlue;
         Brush gridBrush = new SolidBrush(Color.YellowGreen);
-        
+
 
         Timer timer = new Timer();
 
@@ -79,6 +79,8 @@ namespace MainGame
             Pen gridPen = new Pen(gridColor, 1);
             Point gridPoint = new Point();
 
+
+            resetNeighbors();
             //not very efficiant. Try drawing lines later on instead of drawing rectangles
             for (int x = 0; x < universe.GetLength(0); x++)
             {
@@ -89,22 +91,29 @@ namespace MainGame
                     rect.Y = y * height;
                     rect.Width = width;
                     rect.Height = height;
-                    gridPoint = new Point(rect.X, rect.Y);
                     //living cells
                     if (universe[x, y].getAlive() == true)
+                    {
                         e.Graphics.FillRectangle(gridBrush, rect.X, rect.Y, rect.Width, rect.Height);
+                        checkNeighbors(x,y);
+                    }
 
                     //e.Graphics.DrawRectangle(gridPen,rect);
                     e.Graphics.DrawRectangle(gridPen, rect.X, rect.Y, rect.Width, rect.Height);
-
-                    if (universe[x,y].getNeighbors() > 0)
+                }
+            }
+            for (int x = 0; x < universe.GetLength(0); x++)
+            {
+                for (int y = 0; y < universe.GetLength(1); y++)
+                {
+                    if (universe[x, y].getNeighbors() > 0)
                     {
-                        e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont, 
+                        gridPoint = new Point(x * width, y * height);
+                        e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
                             gridBrush, gridPoint);
                     }
                 }
             }
-            checkNeighbors();
             gridPen.Dispose();
         }
 
@@ -197,11 +206,85 @@ namespace MainGame
                 int y = e.Y / height;
 
                 global = !universe[x, y].getAlive();
-                checkNeighbors();
+                
             }
         }
 
-        private void checkNeighbors()
+        private void checkNeighbors(int X, int Y)
+        {
+            if (universe[X, Y].getAlive() == true)
+            {
+                if (X > 0 && Y > 0 && X < 24 && Y < 24)
+                {
+                    universe[X - 1, Y - 1].setNeighbor(1);
+                    universe[X - 1, Y].setNeighbor(1);
+                    universe[X - 1, Y + 1].setNeighbor(1);
+                    universe[X, Y - 1].setNeighbor(1);
+                    universe[X, Y + 1].setNeighbor(1);
+                    universe[X + 1, Y - 1].setNeighbor(1);
+                    universe[X + 1, Y].setNeighbor(1);
+                    universe[X + 1, Y + 1].setNeighbor(1);
+                }
+                else if (X == 0 && Y > 0 && Y < 24)
+                {
+                    universe[X, Y - 1].setNeighbor(1);
+                    universe[X, Y + 1].setNeighbor(1);
+                    universe[X + 1, Y - 1].setNeighbor(1);
+                    universe[X + 1, Y].setNeighbor(1);
+                    universe[X + 1, Y + 1].setNeighbor(1);
+                }
+                else if (X == 0 && Y == 0)
+                {
+                    universe[X, Y + 1].setNeighbor(1);
+                    universe[X + 1, Y].setNeighbor(1);
+                    universe[X + 1, Y + 1].setNeighbor(1);
+                }
+                else if (Y == 0 && X < 24)
+                {
+                    universe[X + 1, Y + 1].setNeighbor(1);
+                    universe[X + 1, Y].setNeighbor(1);
+                    universe[X, Y + 1].setNeighbor(1);
+                    universe[X - 1, Y + 1].setNeighbor(1);
+                    universe[X - 1, Y].setNeighbor(1);
+                }
+                else if (X == 0 & Y == 24)
+                {
+                    universe[X, Y - 1].setNeighbor(1);
+                    universe[X + 1, Y - 1].setNeighbor(1);
+                    universe[X + 1, Y].setNeighbor(1);
+                }
+                else if (X == 24 && Y == 0)
+                {
+                    universe[X - 1, Y].setNeighbor(1);
+                    universe[X - 1, Y + 1].setNeighbor(1);
+                    universe[X, Y + 1].setNeighbor(1);
+                }
+                else if (X == 24 && Y < 24)
+                {
+                    universe[X, Y - 1].setNeighbor(1);
+                    universe[X - 1, Y - 1].setNeighbor(1);
+                    universe[X - 1, Y].setNeighbor(1);
+                    universe[X - 1, Y + 1].setNeighbor(1);
+                    universe[X, Y + 1].setNeighbor(1);
+                }
+                else if (X == 24 && Y == 24)
+                {
+                    universe[X, Y - 1].setNeighbor(1);
+                    universe[X - 1, Y - 1].setNeighbor(1);
+                    universe[X - 1, Y].setNeighbor(1);
+                }
+                else if (X == 24 && Y < 24 && Y > 0)
+                {
+                    universe[X - 1, Y].setNeighbor(1);
+                    universe[X - 1, Y + 1].setNeighbor(1);
+                    universe[X, Y + 1].setNeighbor(1);
+                    universe[X + 1, Y + 1].setNeighbor(1);
+                    universe[X + 1, Y].setNeighbor(1);
+                }
+            }
+        }
+
+        public void resetNeighbors()
         {
             for (int x = 0; x < universe.GetLength(0); x++)
             {
@@ -209,70 +292,10 @@ namespace MainGame
                 {
                     universe[x, y].setNeighbor(-universe[x, y].getNeighbors());
                 }
-            }
-
-
-                    for (int x = 0; x < universe.GetLength(0); x++)
-            {
-                for (int y = 0; y < universe.GetLength(1); y++)
-                {
-                    
-                    if (universe[x, y].getAlive() == true)
-                    {
-                        try
-                        {
-                            universe[x - 1, y - 1].setNeighbor(1);
-                        }
-                        catch
-                        { }
-                        try
-                        {
-                            universe[x - 1, y].setNeighbor(1);
-                        }
-                        catch
-                        { }
-                        try
-                        {
-                            universe[x - 1, y + 1].setNeighbor(1);
-                        }
-                        catch
-                        { }
-                        try
-                        {
-                            universe[x, y - 1].setNeighbor(1);
-                        }
-                        catch
-                        { }
-                        try
-                        {
-                            universe[x + 1, y - 1].setNeighbor(1);
-                        }
-                        catch
-                        { }
-                        try
-                        {
-                            universe[x + 1, y].setNeighbor(1);
-                        }
-                        catch
-                        { }
-                        try
-                        {
-                            universe[x + 1, y + 1].setNeighbor(1);
-                        }
-                        catch { }
-                    }
-                }
-            }
-            for (int x = 0; x < universe.GetLength(0); x++)
-            {
-                for (int y = 0; y < universe.GetLength(1); y++)
-                {
-                    if (universe[x,y].getNeighbors() > 0)
-                    {
-                        
-                    }
-                }
-            }
+            }            
         }
+
+
+
     }
 }
