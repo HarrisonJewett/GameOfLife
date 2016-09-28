@@ -18,7 +18,8 @@ namespace MainGame
         //bool[,] hell = new bool[25, 25];
 
         Color gridColor = Color.AliceBlue;
-        Brush gridBrush = new SolidBrush(Color.YellowGreen);
+        Brush gridBrush = new SolidBrush(Color.Blue);
+        Brush neighborBrush = new SolidBrush(Color.Red);
 
 
         Timer timer = new Timer();
@@ -39,6 +40,7 @@ namespace MainGame
             }
 
             //Set Timer
+            timer.Tick += Timer_Tick;
             timer.Interval = 50;
         }
 
@@ -62,9 +64,11 @@ namespace MainGame
 
 
         //What happens when you click the exit button
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tsmExit_Click(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            //Environment.Exit(0);
+            //Not the proper way to destroy a window
+            this.Close();
         }
 
         //Render the grid to the window
@@ -110,7 +114,7 @@ namespace MainGame
                     {
                         gridPoint = new Point(x * width, y * height);
                         e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
-                            gridBrush, gridPoint);
+                            neighborBrush, gridPoint);
                     }
                 }
             }
@@ -139,7 +143,7 @@ namespace MainGame
         {
             PressNewButton();
         }
-        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void tsbNew_Click(object sender, EventArgs e)
         {
             PressNewButton();
         }
@@ -165,7 +169,6 @@ namespace MainGame
         {
             //clears the box for some reason
             timer.Start();
-            timer.Tick += Timer_Tick;
         }
 
         private bool global = true;
@@ -281,6 +284,14 @@ namespace MainGame
                     universe[X + 1, Y + 1].setNeighbor(1);
                     universe[X + 1, Y].setNeighbor(1);
                 }
+                else if (Y == 24 && X < 24 && X > 0)
+                {
+                    universe[X - 1, Y].setNeighbor(1);
+                    universe[X - 1, Y - 1].setNeighbor(1);
+                    universe[X, Y - 1].setNeighbor(1);
+                    universe[X + 1, Y - 1].setNeighbor(1);
+                    universe[X + 1, Y].setNeighbor(1);
+                }
             }
         }
 
@@ -295,7 +306,9 @@ namespace MainGame
             }            
         }
 
-
-
+        private void tsbPause_Click(object sender, EventArgs e)
+        {
+            timer.Stop();
+        }
     }
 }
