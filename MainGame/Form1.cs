@@ -13,7 +13,7 @@ namespace MainGame
     public partial class Form1 : Form
     {
         Cells[,] universe = new Cells[25, 25];
-        Cells[,] hell = new Cells[25, 25];
+        //Cells[,] hell = new Cells[25, 25];
 
         Color gridColor = Color.AliceBlue;
         Brush gridBrush = new SolidBrush(Color.Blue);
@@ -28,6 +28,7 @@ namespace MainGame
         //Keeps track of how many generations there have been
         int Generations = 0;
 
+        //initializing code and setting timer
         public Form1()
         {
             InitializeComponent();
@@ -44,7 +45,6 @@ namespace MainGame
             timer.Tick += Timer_Tick;
             timer.Interval = 50;
         }
-
         private void Timer_Tick(object sender, EventArgs e)
         {
             //Create
@@ -55,7 +55,11 @@ namespace MainGame
             gridPanel.Invalidate();
 
         }
+        //end timer code
 
+
+
+        //creat life simulation
         private void NextGeneration()
         {
             //Any live cell with fewer than two live neighbours dies, as if caused by under-population.
@@ -91,13 +95,14 @@ namespace MainGame
             //Write the number of generations to the toolbox
             tssGenerationsNum.Text = "Generations: " + Generations.ToString();
         }
+        //end Next generation code
 
         //Render the grid to the window
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
             //Use floats
-            int width = gridPanel.ClientSize.Width / universe.GetLength(0);
-            int height = gridPanel.ClientSize.Height / universe.GetLength(1);
+            float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
+            float height = (float)gridPanel.ClientSize.Height / universe.GetLength(1);
 
 
             //Creating a new pen and setting the color to the variable gridColor
@@ -106,16 +111,27 @@ namespace MainGame
 
 
             resetNeighbors();
-            //not very efficiant. Try drawing lines later on instead of drawing rectangles
+            for (int x = 0; x < universe.GetLength(0); x++)
+            {
+                Point p1 = new Point((int)(x*width), 0);
+                Point p2 = new Point((int)(x*width), gridPanel.ClientSize.Height);
+                e.Graphics.DrawLine(gridPen, p1, p2);
+            }
+            for (int y = 0; y < universe.GetLength(1); y++)
+            {
+                Point p1 = new Point(0, (int)(y*height));
+                Point p2 = new Point(gridPanel.ClientSize.Width, (int)(y*height));
+                e.Graphics.DrawLine(gridPen, p1, p2);
+            }
             for (int x = 0; x < universe.GetLength(0); x++)
             {
                 for (int y = 0; y < universe.GetLength(1); y++)
                 {
                     Rectangle rect = Rectangle.Empty;
-                    rect.X = x * width;
-                    rect.Y = y * height;
-                    rect.Width = width;
-                    rect.Height = height;
+                    rect.X = (int)(x * width);
+                    rect.Y = (int)(y * height);
+                    rect.Width = (int)width;
+                    rect.Height = (int)height;
 
                     //living cells
                     if (universe[x, y].getAlive() == true)
@@ -123,9 +139,7 @@ namespace MainGame
                         e.Graphics.FillRectangle(gridBrush, rect.X, rect.Y, rect.Width, rect.Height);
                         checkNeighbors(x, y);
                     }
-
-                    //e.Graphics.DrawRectangle(gridPen,rect);
-                    e.Graphics.DrawRectangle(gridPen, rect.X, rect.Y, rect.Width, rect.Height);
+                    
                 }
             }
             for (int x = 0; x < universe.GetLength(0); x++)
@@ -134,7 +148,7 @@ namespace MainGame
                 {
                     if (universe[x, y].getNeighbors() > 0)
                     {
-                        gridPoint = new Point(x * width, y * height);
+                        gridPoint = new Point((int)(x * width), (int)(y * height));
 
                         if (universe[x, y].getAlive())
                         {
@@ -168,23 +182,9 @@ namespace MainGame
             }
             gridPen.Dispose();
         }
+        //End drawing function
 
-        //Clicking a cell will change it
-        private void GridPanel_MouseClick(object sender, MouseEventArgs e)
-        {
-            //Getting the width and height to find which cell the mouse clicks in
-            int width = gridPanel.ClientSize.Width / universe.GetLength(0);
-            int height = gridPanel.ClientSize.Height / universe.GetLength(1);
 
-            if (e.Button == MouseButtons.Left)
-            {
-                int x = e.X / width;
-                int y = e.Y / height;
-                universe[x, y].toggleAlive();
-
-                gridPanel.Invalidate();
-            }
-        }
 
         //Pressing either new button will run the new function resetting everything but the generations text
         private void newToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -221,16 +221,36 @@ namespace MainGame
 
         private bool global = true;
 
+
+        //Mouse clicking code
         //Making it so you can drago to turn cells on
-        private void gridPanel_MouseMove(object sender, MouseEventArgs e)
+        //Clicking a cell will change it
+        private void GridPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            int width = gridPanel.ClientSize.Width / universe.GetLength(0);
-            int height = gridPanel.ClientSize.Height / universe.GetLength(1);
+            //Getting the width and height to find which cell the mouse clicks in
+            float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
+            float height = (float)gridPanel.ClientSize.Height / universe.GetLength(1);
 
             if (e.Button == MouseButtons.Left)
             {
-                int x = e.X / width;
-                int y = e.Y / height;
+                float x = e.X / width;
+                float y = e.Y / height;
+                if (x > 0 && x < universe.GetLength(0) && y > 0 && y < universe.GetLength(1))
+                    universe[(int)x, (int)y].toggleAlive();
+
+                gridPanel.Invalidate();
+            }
+        }
+
+        private void gridPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
+            float height = (float)gridPanel.ClientSize.Height / universe.GetLength(1);
+
+            if (e.Button == MouseButtons.Left)
+            {
+                int x = (int)(e.X / width);
+                int y = (int)(e.Y / height);
                 try
                 {
                     if (global)
@@ -244,22 +264,27 @@ namespace MainGame
                 gridPanel.Invalidate();
             }
         }
-
         //Helping with the mouse dragging section
         private void gridPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            int width = gridPanel.ClientSize.Width / universe.GetLength(0);
-            int height = gridPanel.ClientSize.Height / universe.GetLength(1);
+            float width = gridPanel.ClientSize.Width / universe.GetLength(0);
+            float height = gridPanel.ClientSize.Height / universe.GetLength(1);
 
             if (e.Button == MouseButtons.Left)
             {
-                int x = e.X / width;
-                int y = e.Y / height;
+                int x = (int)(e.X / width);
+                int y = (int)(e.Y / height);
 
-                global = !universe[x, y].getAlive();
+                if (x > 0 && x < universe.GetLength(0) && y > 0 && y < universe.GetLength(1))
+                    global = !universe[x, y].getAlive();
+
 
             }
         }
+
+
+        //End of mouse clicking and dragging code
+
 
         //Setting neighbors surrounding alive cell
         private void checkNeighbors(int X, int Y)
