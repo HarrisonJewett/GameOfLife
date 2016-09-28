@@ -12,7 +12,7 @@ namespace MainGame
 {
     public partial class Form1 : Form
     {
-        Cells[,] universe = new Cells[25, 25];
+        Cells[,] universe = new Cells[35, 35];
         //Cells[,] hell = new Cells[25, 25];
 
         Color gridColor = Color.AliceBlue;
@@ -310,7 +310,7 @@ namespace MainGame
         {
             if (universe[X, Y].getAlive() == true)
             {
-                if (X > 0 && Y > 0 && X < 24 && Y < 24)
+                if (X > 0 && Y > 0 && X < universe.GetLength(0) && Y < universe.GetLength(1))
                 {
                     universe[X - 1, Y - 1].setNeighbor(1);
                     universe[X - 1, Y].setNeighbor(1);
@@ -321,7 +321,7 @@ namespace MainGame
                     universe[X + 1, Y].setNeighbor(1);
                     universe[X + 1, Y + 1].setNeighbor(1);
                 }
-                else if (X == 0 && Y > 0 && Y < 24)
+                else if (X == 0 && Y > 0 && Y < universe.GetLength(1))
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X, Y + 1].setNeighbor(1);
@@ -335,7 +335,7 @@ namespace MainGame
                     universe[X + 1, Y].setNeighbor(1);
                     universe[X + 1, Y + 1].setNeighbor(1);
                 }
-                else if (Y == 0 && X < 24)
+                else if (Y == 0 && X < universe.GetLength(0))
                 {
                     universe[X + 1, Y + 1].setNeighbor(1);
                     universe[X + 1, Y].setNeighbor(1);
@@ -343,19 +343,19 @@ namespace MainGame
                     universe[X - 1, Y + 1].setNeighbor(1);
                     universe[X - 1, Y].setNeighbor(1);
                 }
-                else if (X == 0 & Y == 24)
+                else if (X == 0 & Y == universe.GetLength(1))
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X + 1, Y - 1].setNeighbor(1);
                     universe[X + 1, Y].setNeighbor(1);
                 }
-                else if (X == 24 && Y == 0)
+                else if (X == universe.GetLength(0) && Y == 0)
                 {
                     universe[X - 1, Y].setNeighbor(1);
                     universe[X - 1, Y + 1].setNeighbor(1);
                     universe[X, Y + 1].setNeighbor(1);
                 }
-                else if (X == 24 && Y < 24)
+                else if (X == universe.GetLength(0) && Y < universe.GetLength(1))
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X - 1, Y - 1].setNeighbor(1);
@@ -363,13 +363,13 @@ namespace MainGame
                     universe[X - 1, Y + 1].setNeighbor(1);
                     universe[X, Y + 1].setNeighbor(1);
                 }
-                else if (X == 24 && Y == 24)
+                else if (X == universe.GetLength(0) && Y == universe.GetLength(1))
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X - 1, Y - 1].setNeighbor(1);
                     universe[X - 1, Y].setNeighbor(1);
                 }
-                else if (X == 24 && Y < 24 && Y > 0)
+                else if (X == universe.GetLength(0) && Y < universe.GetLength(1) && Y > 0)
                 {
                     universe[X - 1, Y].setNeighbor(1);
                     universe[X - 1, Y + 1].setNeighbor(1);
@@ -377,7 +377,7 @@ namespace MainGame
                     universe[X + 1, Y + 1].setNeighbor(1);
                     universe[X + 1, Y].setNeighbor(1);
                 }
-                else if (Y == 24 && X < 24 && X > 0)
+                else if (Y == universe.GetLength(1) && X < universe.GetLength(0) && X > 0)
                 {
                     universe[X - 1, Y].setNeighbor(1);
                     universe[X - 1, Y - 1].setNeighbor(1);
