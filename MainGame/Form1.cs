@@ -13,13 +13,14 @@ namespace MainGame
     public partial class Form1 : Form
     {
         Cells[,] universe = new Cells[25, 25];
-        //bool[,] universe = new bool[25, 25];
         Cells[,] hell = new Cells[25, 25];
-        //bool[,] hell = new bool[25, 25];
 
         Color gridColor = Color.AliceBlue;
         Brush gridBrush = new SolidBrush(Color.Blue);
-        Brush neighborBrush = new SolidBrush(Color.Red);
+        Brush aliveBrush = new SolidBrush(Color.ForestGreen);
+        Brush deadBrush = new SolidBrush(Color.Red);
+
+        Random RNG = new Random();
 
 
         Timer timer = new Timer();
@@ -54,21 +55,41 @@ namespace MainGame
             gridPanel.Invalidate();
 
         }
+
         private void NextGeneration()
         {
+            //Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+            //Any live cell with two or three live neighbours lives on to the next generation.
+            //Any live cell with more than three live neighbours dies, as if by over - population.
+            //Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+
+
             //Calculate the next generation of life
+            for (int x = 0; x < universe.GetLength(0); x++)
+            {
+                for (int y = 0; y < universe.GetLength(1); y++)
+                {
+                    if (universe[x, y].getAlive())
+                    {
+                        if (universe[x, y].getNeighbors() < 2 || universe[x, y].getNeighbors() > 3)
+                        {
+                            universe[x, y].toggleAlive();
+                        }
+                    }
+                    else
+                    {
+                        if (universe[x, y].getNeighbors() == 3)
+                        {
+                            universe[x, y].toggleAlive();
+                        }
+                    }
+                }
+            }
+            Generations++;
+            gridPanel.Invalidate();
 
             //Write the number of generations to the toolbox
             tssGenerationsNum.Text = "Generations: " + Generations.ToString();
-        }
-
-
-        //What happens when you click the exit button
-        private void tsmExit_Click(object sender, EventArgs e)
-        {
-            //Environment.Exit(0);
-            //Not the proper way to destroy a window
-            this.Close();
         }
 
         //Render the grid to the window
@@ -95,11 +116,12 @@ namespace MainGame
                     rect.Y = y * height;
                     rect.Width = width;
                     rect.Height = height;
+
                     //living cells
                     if (universe[x, y].getAlive() == true)
                     {
                         e.Graphics.FillRectangle(gridBrush, rect.X, rect.Y, rect.Width, rect.Height);
-                        checkNeighbors(x,y);
+                        checkNeighbors(x, y);
                     }
 
                     //e.Graphics.DrawRectangle(gridPen,rect);
@@ -113,8 +135,34 @@ namespace MainGame
                     if (universe[x, y].getNeighbors() > 0)
                     {
                         gridPoint = new Point(x * width, y * height);
-                        e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
-                            neighborBrush, gridPoint);
+
+                        if (universe[x, y].getAlive())
+                        {
+                            if (universe[x, y].getNeighbors() < 2 || universe[x, y].getNeighbors() > 3)
+                            {
+                                e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
+                                    deadBrush, gridPoint);
+                            }
+                            else
+                            {
+                                e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
+                                      aliveBrush, gridPoint);
+                            }
+                        }
+                        else
+                        {
+                            if (universe[x, y].getNeighbors() == 3)
+                            {
+                                e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
+                            aliveBrush, gridPoint);
+                            }
+                            else
+                            {
+                                e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
+                            deadBrush, gridPoint);
+                            }
+                        }
+
                     }
                 }
             }
@@ -158,8 +206,8 @@ namespace MainGame
             }
             Generations = 0;
             timer.Stop();
+            tssGenerationsNum.Text = "Generations: " + Generations;
             gridPanel.Invalidate();
-            stsMain.Text = "Generations:";
         }
         //End of new button code
 
@@ -209,10 +257,11 @@ namespace MainGame
                 int y = e.Y / height;
 
                 global = !universe[x, y].getAlive();
-                
+
             }
         }
 
+        //Setting neighbors surrounding alive cell
         private void checkNeighbors(int X, int Y)
         {
             if (universe[X, Y].getAlive() == true)
@@ -295,6 +344,7 @@ namespace MainGame
             }
         }
 
+        //Resets the neighbors so they don't keep counting everytime a new cell is made
         public void resetNeighbors()
         {
             for (int x = 0; x < universe.GetLength(0); x++)
@@ -303,12 +353,38 @@ namespace MainGame
                 {
                     universe[x, y].setNeighbor(-universe[x, y].getNeighbors());
                 }
-            }            
+            }
         }
 
         private void tsbPause_Click(object sender, EventArgs e)
         {
             timer.Stop();
+        }
+
+        private void tsmExit_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void tsbNext_Click(object sender, EventArgs e)
+        {
+            NextGeneration();
+        }
+
+        private void toolsRandomize_Click(object sender, EventArgs e)
+        {
+            for (int x = 0; x < universe.GetLength(0); x++)
+            {
+                for (int y = 0; y < universe.GetLength(1); y++)
+                {
+                    if (RNG.Next() % 2 == 0)
+                    {
+                        universe[x, y].toggleAlive();
+                    }
+                }
+
+                gridPanel.Invalidate();
+            }
         }
     }
 }
