@@ -28,6 +28,8 @@ namespace MainGame
         //Keeps track of how many generations there have been
         int Generations = 0;
 
+        int cellCount = 0;
+
         //initializing code and setting timer
         public Form1()
         {
@@ -44,6 +46,8 @@ namespace MainGame
             //Set Timer
             timer.Tick += Timer_Tick;
             timer.Interval = 50;
+
+            
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -73,6 +77,7 @@ namespace MainGame
             {
                 for (int y = 0; y < universe.GetLength(1); y++)
                 {
+                    
                     if (universe[x, y].getAlive())
                     {
                         if (universe[x, y].getNeighbors() < 2 || universe[x, y].getNeighbors() > 3)
@@ -97,9 +102,15 @@ namespace MainGame
         }
         //end Next generation code
 
+
+        /*
+         * Paint Section
+         */
+         
         //Render the grid to the window
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
+            cellCount = 0;
             //Use floats
             float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
             float height = (float)gridPanel.ClientSize.Height / universe.GetLength(1);
@@ -111,17 +122,20 @@ namespace MainGame
 
 
             resetNeighbors();
-            for (int x = 0; x < universe.GetLength(0); x++)
+            if (viewGrid.Checked)
             {
-                Point p1 = new Point((int)(x*width), 0);
-                Point p2 = new Point((int)(x*width), gridPanel.ClientSize.Height);
-                e.Graphics.DrawLine(gridPen, p1, p2);
-            }
-            for (int y = 0; y < universe.GetLength(1); y++)
-            {
-                Point p1 = new Point(0, (int)(y*height));
-                Point p2 = new Point(gridPanel.ClientSize.Width, (int)(y*height));
-                e.Graphics.DrawLine(gridPen, p1, p2);
+                for (int x = 0; x < universe.GetLength(0); x++)
+                {
+                    Point p1 = new Point((int)(x * width), 0);
+                    Point p2 = new Point((int)(x * width), gridPanel.ClientSize.Height);
+                    e.Graphics.DrawLine(gridPen, p1, p2);
+                }
+                for (int y = 0; y < universe.GetLength(1); y++)
+                {
+                    Point p1 = new Point(0, (int)(y * height));
+                    Point p2 = new Point(gridPanel.ClientSize.Width, (int)(y * height));
+                    e.Graphics.DrawLine(gridPen, p1, p2);
+                }
             }
             for (int x = 0; x < universe.GetLength(0); x++)
             {
@@ -136,50 +150,55 @@ namespace MainGame
                     //living cells
                     if (universe[x, y].getAlive() == true)
                     {
+                        cellCount++;
                         e.Graphics.FillRectangle(gridBrush, rect.X, rect.Y, rect.Width, rect.Height);
                         checkNeighbors(x, y);
                     }
                     
                 }
             }
-            for (int x = 0; x < universe.GetLength(0); x++)
+            if (viewNeighbor.Checked)
             {
-                for (int y = 0; y < universe.GetLength(1); y++)
+                for (int x = 0; x < universe.GetLength(0); x++)
                 {
-                    if (universe[x, y].getNeighbors() > 0)
+                    for (int y = 0; y < universe.GetLength(1); y++)
                     {
-                        gridPoint = new Point((int)(x * width), (int)(y * height));
-
-                        if (universe[x, y].getAlive())
+                        if (universe[x, y].getNeighbors() > 0)
                         {
-                            if (universe[x, y].getNeighbors() < 2 || universe[x, y].getNeighbors() > 3)
+                            gridPoint = new Point((int)(x * width), (int)(y * height));
+
+                            if (universe[x, y].getAlive())
                             {
-                                e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
-                                    deadBrush, gridPoint);
+                                if (universe[x, y].getNeighbors() < 2 || universe[x, y].getNeighbors() > 3)
+                                {
+                                    e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
+                                        deadBrush, gridPoint);
+                                }
+                                else
+                                {
+                                    e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
+                                          aliveBrush, gridPoint);
+                                }
                             }
                             else
                             {
-                                e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
-                                      aliveBrush, gridPoint);
+                                if (universe[x, y].getNeighbors() == 3)
+                                {
+                                    e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
+                                aliveBrush, gridPoint);
+                                }
+                                else
+                                {
+                                    e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
+                                deadBrush, gridPoint);
+                                }
                             }
                         }
-                        else
-                        {
-                            if (universe[x, y].getNeighbors() == 3)
-                            {
-                                e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
-                            aliveBrush, gridPoint);
-                            }
-                            else
-                            {
-                                e.Graphics.DrawString(universe[x, y].getNeighbors().ToString(), SystemFonts.DefaultFont,
-                            deadBrush, gridPoint);
-                            }
-                        }
-
                     }
                 }
             }
+            tssCells.Text = "Cells: " + cellCount;
+
             gridPen.Dispose();
         }
         //End drawing function
@@ -410,6 +429,35 @@ namespace MainGame
 
                 gridPanel.Invalidate();
             }
+        }
+
+        private void viewGrid_Click(object sender, EventArgs e)
+        {
+            if (viewGrid.Checked)
+                viewGrid.Checked = false;
+            else
+                viewGrid.Checked = true;
+            gridPanel.Invalidate();
+        }
+
+        private void viewNeighbor_Click(object sender, EventArgs e)
+        {
+            if (viewNeighbor.Checked)
+                viewNeighbor.Checked = false;
+            else
+                viewNeighbor.Checked = true;
+
+            gridPanel.Invalidate();
+        }
+
+        private void viewHUD_Click(object sender, EventArgs e)
+        {
+            if (viewHUD.Checked)
+                viewHUD.Checked = false;
+            else
+                viewHUD.Checked = true;
+
+            gridPanel.Invalidate();
         }
     }
 }

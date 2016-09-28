@@ -38,9 +38,9 @@
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmExit = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.gridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hUDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.neighborCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewGrid = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewHUD = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewNeighbor = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,6 +62,7 @@
             this.stsMain = new System.Windows.Forms.StatusStrip();
             this.tssGenerationsNum = new System.Windows.Forms.ToolStripStatusLabel();
             this.gridPanel = new MainGame.GraphicsPanel();
+            this.tssCells = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.stsMain.SuspendLayout();
@@ -144,30 +145,39 @@
             // editToolStripMenuItem1
             // 
             this.editToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gridToolStripMenuItem,
-            this.hUDToolStripMenuItem,
-            this.neighborCountToolStripMenuItem});
+            this.viewGrid,
+            this.viewHUD,
+            this.viewNeighbor});
             this.editToolStripMenuItem1.Name = "editToolStripMenuItem1";
             this.editToolStripMenuItem1.Size = new System.Drawing.Size(53, 24);
             this.editToolStripMenuItem1.Text = "&View";
             // 
-            // gridToolStripMenuItem
+            // viewGrid
             // 
-            this.gridToolStripMenuItem.Name = "gridToolStripMenuItem";
-            this.gridToolStripMenuItem.Size = new System.Drawing.Size(190, 26);
-            this.gridToolStripMenuItem.Text = "&Grid";
+            this.viewGrid.Checked = true;
+            this.viewGrid.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.viewGrid.Name = "viewGrid";
+            this.viewGrid.Size = new System.Drawing.Size(190, 26);
+            this.viewGrid.Text = "&Grid Visible";
+            this.viewGrid.Click += new System.EventHandler(this.viewGrid_Click);
             // 
-            // hUDToolStripMenuItem
+            // viewHUD
             // 
-            this.hUDToolStripMenuItem.Name = "hUDToolStripMenuItem";
-            this.hUDToolStripMenuItem.Size = new System.Drawing.Size(190, 26);
-            this.hUDToolStripMenuItem.Text = "&HUD";
+            this.viewHUD.Checked = true;
+            this.viewHUD.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.viewHUD.Name = "viewHUD";
+            this.viewHUD.Size = new System.Drawing.Size(190, 26);
+            this.viewHUD.Text = "&HUD";
+            this.viewHUD.Click += new System.EventHandler(this.viewHUD_Click);
             // 
-            // neighborCountToolStripMenuItem
+            // viewNeighbor
             // 
-            this.neighborCountToolStripMenuItem.Name = "neighborCountToolStripMenuItem";
-            this.neighborCountToolStripMenuItem.Size = new System.Drawing.Size(190, 26);
-            this.neighborCountToolStripMenuItem.Text = "&Neighbor Count";
+            this.viewNeighbor.Checked = true;
+            this.viewNeighbor.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.viewNeighbor.Name = "viewNeighbor";
+            this.viewNeighbor.Size = new System.Drawing.Size(190, 26);
+            this.viewNeighbor.Text = "&Neighbor Count";
+            this.viewNeighbor.Click += new System.EventHandler(this.viewNeighbor_Click);
             // 
             // runToolStripMenuItem
             // 
@@ -218,26 +228,26 @@
             // toolsRandomize
             // 
             this.toolsRandomize.Name = "toolsRandomize";
-            this.toolsRandomize.Size = new System.Drawing.Size(181, 26);
+            this.toolsRandomize.Size = new System.Drawing.Size(159, 26);
             this.toolsRandomize.Text = "Randomize";
             this.toolsRandomize.Click += new System.EventHandler(this.toolsRandomize_Click);
             // 
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
             this.customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // toolStrip1
@@ -325,7 +335,8 @@
             this.stsMain.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.stsMain.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.stsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tssGenerationsNum});
+            this.tssGenerationsNum,
+            this.tssCells});
             this.stsMain.Location = new System.Drawing.Point(0, 565);
             this.stsMain.Name = "stsMain";
             this.stsMain.Size = new System.Drawing.Size(618, 25);
@@ -350,6 +361,12 @@
             this.gridPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.GridPanel_MouseClick);
             this.gridPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridPanel_MouseDown);
             this.gridPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gridPanel_MouseMove);
+            // 
+            // tssCells
+            // 
+            this.tssCells.Name = "tssCells";
+            this.tssCells.Size = new System.Drawing.Size(43, 20);
+            this.tssCells.Text = "Cells:";
             // 
             // Form1
             // 
@@ -398,9 +415,9 @@
         private System.Windows.Forms.StatusStrip stsMain;
         private System.Windows.Forms.ToolStripStatusLabel tssGenerationsNum;
         private System.Windows.Forms.ToolStripButton tsbPlay;
-        private System.Windows.Forms.ToolStripMenuItem gridToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hUDToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem neighborCountToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewGrid;
+        private System.Windows.Forms.ToolStripMenuItem viewHUD;
+        private System.Windows.Forms.ToolStripMenuItem viewNeighbor;
         private System.Windows.Forms.ToolStripMenuItem runToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
@@ -410,6 +427,7 @@
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton tsbPause;
         private System.Windows.Forms.ToolStripButton tsbNext;
+        private System.Windows.Forms.ToolStripStatusLabel tssCells;
     }
 }
 
