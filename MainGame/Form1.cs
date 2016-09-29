@@ -154,7 +154,7 @@ namespace MainGame
                         e.Graphics.FillRectangle(gridBrush, rect.X, rect.Y, rect.Width, rect.Height);
                         checkNeighbors(x, y);
                     }
-                    
+
                 }
             }
             if (viewNeighbor.Checked)
@@ -246,19 +246,6 @@ namespace MainGame
         //Clicking a cell will change it
         private void GridPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            //Getting the width and height to find which cell the mouse clicks in
-            float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
-            float height = (float)gridPanel.ClientSize.Height / universe.GetLength(1);
-
-            if (e.Button == MouseButtons.Left)
-            {
-                float x = e.X / width;
-                float y = e.Y / height;
-                if (x > 0 && x < universe.GetLength(0) && y > 0 && y < universe.GetLength(1))
-                    universe[(int)x, (int)y].toggleAlive();
-
-                gridPanel.Invalidate();
-            }
         }
 
         private void gridPanel_MouseMove(object sender, MouseEventArgs e)
@@ -270,15 +257,12 @@ namespace MainGame
             {
                 int x = (int)(e.X / width);
                 int y = (int)(e.Y / height);
-                try
+                if (x > 0 && x < universe.GetLength(0) && y > 0 && y < universe.GetLength(1))
                 {
                     if (global)
                         universe[x, y].setAliveTrue();
                     else
                         universe[x, y].setAliveFalse();
-                }
-                catch
-                {
                 }
                 gridPanel.Invalidate();
             }
@@ -286,8 +270,8 @@ namespace MainGame
         //Helping with the mouse dragging section
         private void gridPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            float width = gridPanel.ClientSize.Width / universe.GetLength(0);
-            float height = gridPanel.ClientSize.Height / universe.GetLength(1);
+            float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
+            float height = (float)gridPanel.ClientSize.Height / universe.GetLength(1);
 
             if (e.Button == MouseButtons.Left)
             {
@@ -295,8 +279,11 @@ namespace MainGame
                 int y = (int)(e.Y / height);
 
                 if (x > 0 && x < universe.GetLength(0) && y > 0 && y < universe.GetLength(1))
+                {
                     global = !universe[x, y].getAlive();
-
+                    universe[x, y].toggleAlive();
+                }
+                gridPanel.Invalidate();
 
             }
         }
@@ -310,7 +297,7 @@ namespace MainGame
         {
             if (universe[X, Y].getAlive() == true)
             {
-                if (X > 0 && Y > 0 && X < universe.GetLength(0) && Y < universe.GetLength(1))
+                if (X > 0 && Y > 0 && X < universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1)
                 {
                     universe[X - 1, Y - 1].setNeighbor(1);
                     universe[X - 1, Y].setNeighbor(1);
@@ -321,7 +308,7 @@ namespace MainGame
                     universe[X + 1, Y].setNeighbor(1);
                     universe[X + 1, Y + 1].setNeighbor(1);
                 }
-                else if (X == 0 && Y > 0 && Y < universe.GetLength(1))
+                else if (X == 0 && Y > 0 && Y < universe.GetLength(1) - 1)
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X, Y + 1].setNeighbor(1);
@@ -335,7 +322,7 @@ namespace MainGame
                     universe[X + 1, Y].setNeighbor(1);
                     universe[X + 1, Y + 1].setNeighbor(1);
                 }
-                else if (Y == 0 && X < universe.GetLength(0))
+                else if (Y == 0 && X < universe.GetLength(0) - 1)
                 {
                     universe[X + 1, Y + 1].setNeighbor(1);
                     universe[X + 1, Y].setNeighbor(1);
@@ -343,19 +330,19 @@ namespace MainGame
                     universe[X - 1, Y + 1].setNeighbor(1);
                     universe[X - 1, Y].setNeighbor(1);
                 }
-                else if (X == 0 & Y == universe.GetLength(1))
+                else if (X == 0 & Y == universe.GetLength(1) - 1)
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X + 1, Y - 1].setNeighbor(1);
                     universe[X + 1, Y].setNeighbor(1);
                 }
-                else if (X == universe.GetLength(0) && Y == 0)
+                else if (X == universe.GetLength(0) - 1 && Y == 0)
                 {
                     universe[X - 1, Y].setNeighbor(1);
                     universe[X - 1, Y + 1].setNeighbor(1);
                     universe[X, Y + 1].setNeighbor(1);
                 }
-                else if (X == universe.GetLength(0) && Y < universe.GetLength(1))
+                else if (X == universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1)
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X - 1, Y - 1].setNeighbor(1);
@@ -363,13 +350,13 @@ namespace MainGame
                     universe[X - 1, Y + 1].setNeighbor(1);
                     universe[X, Y + 1].setNeighbor(1);
                 }
-                else if (X == universe.GetLength(0) && Y == universe.GetLength(1))
+                else if (X == universe.GetLength(0) - 1 && Y == universe.GetLength(1) - 1)
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X - 1, Y - 1].setNeighbor(1);
                     universe[X - 1, Y].setNeighbor(1);
                 }
-                else if (X == universe.GetLength(0) && Y < universe.GetLength(1) && Y > 0)
+                else if (X == universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1 && Y > 0)
                 {
                     universe[X - 1, Y].setNeighbor(1);
                     universe[X - 1, Y + 1].setNeighbor(1);
@@ -377,7 +364,7 @@ namespace MainGame
                     universe[X + 1, Y + 1].setNeighbor(1);
                     universe[X + 1, Y].setNeighbor(1);
                 }
-                else if (Y == universe.GetLength(1) && X < universe.GetLength(0) && X > 0)
+                else if (Y == universe.GetLength(1) - 1 && X < universe.GetLength(0) - 1 && X > 0)
                 {
                     universe[X - 1, Y].setNeighbor(1);
                     universe[X - 1, Y - 1].setNeighbor(1);
@@ -421,12 +408,9 @@ namespace MainGame
             {
                 for (int y = 0; y < universe.GetLength(1); y++)
                 {
-                    if (RNG.Next() % 2 == 0)
-                    {
+                    if (RNG.Next() % 3 == 0)
                         universe[x, y].toggleAlive();
-                    }
                 }
-
                 gridPanel.Invalidate();
             }
         }
@@ -459,5 +443,6 @@ namespace MainGame
 
             gridPanel.Invalidate();
         }
+        
     }
 }

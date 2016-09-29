@@ -61,8 +61,8 @@
             this.tsbNext = new System.Windows.Forms.ToolStripButton();
             this.stsMain = new System.Windows.Forms.StatusStrip();
             this.tssGenerationsNum = new System.Windows.Forms.ToolStripStatusLabel();
-            this.gridPanel = new MainGame.GraphicsPanel();
             this.tssCells = new System.Windows.Forms.ToolStripStatusLabel();
+            this.gridPanel = new MainGame.GraphicsPanel();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.stsMain.SuspendLayout();
@@ -349,6 +349,12 @@
             this.tssGenerationsNum.Size = new System.Drawing.Size(95, 20);
             this.tssGenerationsNum.Text = "Generations: ";
             // 
+            // tssCells
+            // 
+            this.tssCells.Name = "tssCells";
+            this.tssCells.Size = new System.Drawing.Size(43, 20);
+            this.tssCells.Text = "Cells:";
+            // 
             // gridPanel
             // 
             this.gridPanel.BackColor = System.Drawing.SystemColors.ControlDark;
@@ -361,12 +367,6 @@
             this.gridPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.GridPanel_MouseClick);
             this.gridPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridPanel_MouseDown);
             this.gridPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gridPanel_MouseMove);
-            // 
-            // tssCells
-            // 
-            this.tssCells.Name = "tssCells";
-            this.tssCells.Size = new System.Drawing.Size(43, 20);
-            this.tssCells.Text = "Cells:";
             // 
             // Form1
             // 
