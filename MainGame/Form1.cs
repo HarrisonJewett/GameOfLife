@@ -27,7 +27,7 @@ namespace MainGame
 
     public partial class Form1 : Form
     {
-
+        
         //Cells[,] hell = new Cells[25, 25];
 
         Color gridColor = Color.AliceBlue;
@@ -47,7 +47,7 @@ namespace MainGame
         int ySize = 30;
 
         Cells[,] universe;
-        //= new Cells[30,30];
+            //= new Cells[30,30];
 
 
         //initializing code and setting timer
@@ -55,11 +55,11 @@ namespace MainGame
         {
             InitializeComponent();
 
-            universe = new Cells[xSize, ySize];
+            universe = new Cells[xSize,ySize];
 
 
             //Only paint in wm.paint
-            for (int x = 0; x < xSize; x++)
+            for (int x = 0; x < universe.GetLength(0); x++)
             {
                 for (int y = 0; y < universe.GetLength(1); y++)
                 {
@@ -71,7 +71,7 @@ namespace MainGame
             timer.Tick += Timer_Tick;
             timer.Interval = 50;
 
-
+            
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -97,11 +97,11 @@ namespace MainGame
 
 
             //Calculate the next generation of life
-            for (int x = 0; x < xSize; x++)
+            for (int x = 0; x < universe.GetLength(0); x++)
             {
                 for (int y = 0; y < universe.GetLength(1); y++)
                 {
-
+                    
                     if (universe[x, y].getAlive())
                     {
                         if (universe[x, y].getNeighbors() < 2 || universe[x, y].getNeighbors() > 3)
@@ -130,25 +130,14 @@ namespace MainGame
         /*
          * Paint Section
          */
-
+         
         //Render the grid to the window
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
-            //universe = new Cells[xSize, ySize];
-
-
-            ////Only paint in wm.paint
-            //for (int x = 0; x < xSize; x++)
-            //{
-            //    for (int y = 0; y < universe.GetLength(1); y++)
-            //    {
-            //        universe[x, y] = new Cells(x, y);
-            //    }
-            //}
             cellCount = 0;
             //Use floats
-            float width = (float)gridPanel.ClientSize.Width / xSize;
-            float height = (float)gridPanel.ClientSize.Height / ySize;
+            float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
+            float height = (float)gridPanel.ClientSize.Height / universe.GetLength(1);
 
 
             //Creating a new pen and setting the color to the variable gridColor
@@ -159,22 +148,22 @@ namespace MainGame
             resetNeighbors();
             if (viewGrid.Checked)
             {
-                for (int x = 0; x < xSize; x++)
+                for (int x = 0; x < universe.GetLength(0); x++)
                 {
                     Point p1 = new Point((int)(x * width), 0);
                     Point p2 = new Point((int)(x * width), gridPanel.ClientSize.Height);
                     e.Graphics.DrawLine(gridPen, p1, p2);
                 }
-                for (int y = 0; y < ySize; y++)
+                for (int y = 0; y < universe.GetLength(1); y++)
                 {
                     Point p1 = new Point(0, (int)(y * height));
                     Point p2 = new Point(gridPanel.ClientSize.Width, (int)(y * height));
                     e.Graphics.DrawLine(gridPen, p1, p2);
                 }
             }
-            for (int x = 0; x < xSize; x++)
+            for (int x = 0; x < universe.GetLength(0); x++)
             {
-                for (int y = 0; y < ySize; y++)
+                for (int y = 0; y < universe.GetLength(1); y++)
                 {
                     Rectangle rect = Rectangle.Empty;
                     rect.X = (int)(x * width);
@@ -194,9 +183,9 @@ namespace MainGame
             }
             if (viewNeighbor.Checked)
             {
-                for (int x = 0; x < xSize; x++)
+                for (int x = 0; x < universe.GetLength(0); x++)
                 {
-                    for (int y = 0; y < ySize; y++)
+                    for (int y = 0; y < universe.GetLength(1); y++)
                     {
                         if (universe[x, y].getNeighbors() > 0)
                         {
@@ -249,15 +238,11 @@ namespace MainGame
         {
             PressNewButton();
         }
-        private void tsmiClear_Click(object sender, EventArgs e)
-        {
-            PressNewButton();
-        }
         private void PressNewButton()
         {
-            for (int x = 0; x < xSize; x++)
+            for (int x = 0; x < universe.GetLength(0); x++)
             {
-                for (int y = 0; y < ySize; y++)
+                for (int y = 0; y < universe.GetLength(1); y++)
                 {
                     universe[x, y] = new Cells();
                 }
@@ -279,10 +264,6 @@ namespace MainGame
         {
             timer.Start();
         }
-        private void tsmiStart_Click(object sender, EventArgs e)
-        {
-            timer.Start();
-        }
 
         private bool global = true;
 
@@ -290,16 +271,20 @@ namespace MainGame
         //Mouse clicking code
         //Making it so you can drago to turn cells on
         //Clicking a cell will change it
+        private void GridPanel_MouseClick(object sender, MouseEventArgs e)
+        {
+        }
+
         private void gridPanel_MouseMove(object sender, MouseEventArgs e)
         {
-            float width = (float)gridPanel.ClientSize.Width / xSize;
-            float height = (float)gridPanel.ClientSize.Height / ySize;
+            float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
+            float height = (float)gridPanel.ClientSize.Height / universe.GetLength(1);
 
             if (e.Button == MouseButtons.Left)
             {
                 int x = (int)(e.X / width);
                 int y = (int)(e.Y / height);
-                if (x >= 0 && x < xSize && y >= 0 && y < ySize)
+                if (x >= 0 && x < universe.GetLength(0) && y >= 0 && y < universe.GetLength(1))
                 {
                     if (global)
                         universe[x, y].setAliveTrue();
@@ -312,15 +297,15 @@ namespace MainGame
         //Helping with the mouse dragging section
         private void gridPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            float width = (float)gridPanel.ClientSize.Width / xSize;
-            float height = (float)gridPanel.ClientSize.Height / ySize;
+            float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
+            float height = (float)gridPanel.ClientSize.Height / universe.GetLength(1);
 
             if (e.Button == MouseButtons.Left)
             {
                 int x = (int)(e.X / width);
                 int y = (int)(e.Y / height);
 
-                if (x >= 0 && x < xSize && y >= 0 && y < ySize)
+                if (x >= 0 && x < universe.GetLength(0) && y >= 0 && y < universe.GetLength(1))
                 {
                     global = !universe[x, y].getAlive();
                     universe[x, y].toggleAlive();
@@ -329,6 +314,8 @@ namespace MainGame
 
             }
         }
+
+
         //End of mouse clicking and dragging code
 
 
@@ -337,7 +324,7 @@ namespace MainGame
         {
             if (universe[X, Y].getAlive() == true)
             {
-                if (X > 0 && Y > 0 && X < xSize - 1 && Y < ySize - 1)
+                if (X > 0 && Y > 0 && X < universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1)
                 {
                     universe[X - 1, Y - 1].setNeighbor(1);
                     universe[X - 1, Y].setNeighbor(1);
@@ -348,7 +335,7 @@ namespace MainGame
                     universe[X + 1, Y].setNeighbor(1);
                     universe[X + 1, Y + 1].setNeighbor(1);
                 }
-                else if (X == 0 && Y > 0 && Y < ySize - 1)
+                else if (X == 0 && Y > 0 && Y < universe.GetLength(1) - 1)
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X, Y + 1].setNeighbor(1);
@@ -362,7 +349,7 @@ namespace MainGame
                     universe[X + 1, Y].setNeighbor(1);
                     universe[X + 1, Y + 1].setNeighbor(1);
                 }
-                else if (Y == 0 && X < xSize - 1)
+                else if (Y == 0 && X < universe.GetLength(0) - 1)
                 {
                     universe[X + 1, Y + 1].setNeighbor(1);
                     universe[X + 1, Y].setNeighbor(1);
@@ -370,19 +357,19 @@ namespace MainGame
                     universe[X - 1, Y + 1].setNeighbor(1);
                     universe[X - 1, Y].setNeighbor(1);
                 }
-                else if (X == 0 & Y == ySize - 1)
+                else if (X == 0 & Y == universe.GetLength(1) - 1)
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X + 1, Y - 1].setNeighbor(1);
                     universe[X + 1, Y].setNeighbor(1);
                 }
-                else if (X == xSize - 1 && Y == 0)
+                else if (X == universe.GetLength(0) - 1 && Y == 0)
                 {
                     universe[X - 1, Y].setNeighbor(1);
                     universe[X - 1, Y + 1].setNeighbor(1);
                     universe[X, Y + 1].setNeighbor(1);
                 }
-                else if (X == xSize - 1 && Y < universe.GetLength(1) - 1)
+                else if (X == universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1)
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X - 1, Y - 1].setNeighbor(1);
@@ -390,13 +377,13 @@ namespace MainGame
                     universe[X - 1, Y + 1].setNeighbor(1);
                     universe[X, Y + 1].setNeighbor(1);
                 }
-                else if (X == xSize - 1 && Y == universe.GetLength(1) - 1)
+                else if (X == universe.GetLength(0) - 1 && Y == universe.GetLength(1) - 1)
                 {
                     universe[X, Y - 1].setNeighbor(1);
                     universe[X - 1, Y - 1].setNeighbor(1);
                     universe[X - 1, Y].setNeighbor(1);
                 }
-                else if (X == xSize - 1 && Y < universe.GetLength(1) - 1 && Y > 0)
+                else if (X == universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1 && Y > 0)
                 {
                     universe[X - 1, Y].setNeighbor(1);
                     universe[X - 1, Y + 1].setNeighbor(1);
@@ -404,7 +391,7 @@ namespace MainGame
                     universe[X + 1, Y + 1].setNeighbor(1);
                     universe[X + 1, Y].setNeighbor(1);
                 }
-                else if (Y == universe.GetLength(1) - 1 && X < xSize - 1 && X > 0)
+                else if (Y == universe.GetLength(1) - 1 && X < universe.GetLength(0) - 1 && X > 0)
                 {
                     universe[X - 1, Y].setNeighbor(1);
                     universe[X - 1, Y - 1].setNeighbor(1);
@@ -418,7 +405,7 @@ namespace MainGame
         //Resets the neighbors so they don't keep counting everytime a new cell is made
         public void resetNeighbors()
         {
-            for (int x = 0; x < xSize; x++)
+            for (int x = 0; x < universe.GetLength(0); x++)
             {
                 for (int y = 0; y < universe.GetLength(1); y++)
                 {
@@ -432,10 +419,6 @@ namespace MainGame
             timer.Stop();
         }
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            timer.Stop();
-        }
-        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             timer.Stop();
         }
@@ -453,54 +436,23 @@ namespace MainGame
         {
             NextGeneration();
         }
-        private void tsmiNext_Click(object sender, EventArgs e)
-        {
-            NextGeneration();
-        }
 
         private void viewGrid_Click(object sender, EventArgs e)
         {
-            toggleGrid();
-        }
-        private void gridVisibleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            toggleGrid();
-        }
-        private void toggleGrid()
-        {
             if (viewGrid.Checked)
-            {
                 viewGrid.Checked = false;
-                gridVisibleToolStripMenuItem.Checked = false;
-            }
             else
-            {
                 viewGrid.Checked = true;
-                gridVisibleToolStripMenuItem.Checked = true;
-            }
             gridPanel.Invalidate();
         }
 
         private void viewNeighbor_Click(object sender, EventArgs e)
         {
-            toggleNeighborCount();
-        }
-        private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            toggleNeighborCount();
-        }
-        private void toggleNeighborCount()
-        {
             if (viewNeighbor.Checked)
-            {
                 viewNeighbor.Checked = false;
-                neighborCountToolStripMenuItem.Checked = false;
-            }
             else
-            {
                 viewNeighbor.Checked = true;
-                neighborCountToolStripMenuItem.Checked = true;
-            }
+
             gridPanel.Invalidate();
         }
 
@@ -517,21 +469,17 @@ namespace MainGame
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Options opt = new Options();
-            opt.xAxis = xSize;
-            opt.yAxis = universe.GetLength(1);
+
             if (DialogResult.OK == opt.ShowDialog())
             {
-                xSize = opt.xAxis;
-                ySize = opt.yAxis;
                 int x = 10;
-                gridPanel.Invalidate();
             }
         }
 
         private void fromNewSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
             Seed seed = new Seed();
+
             if (DialogResult.OK == seed.ShowDialog())
             {
                 int x = 10;
@@ -541,7 +489,7 @@ namespace MainGame
         private void fromCurrentSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Seed seed = new Seed();
-            //for (int x = 0; x < xSize; x++)
+            //for (int x = 0; x < universe.GetLength(0); x++)
             //{
             //    for (int y = 0; y < universe.GetLength(1); y++)
             //    {
@@ -550,15 +498,6 @@ namespace MainGame
             //    }
             //    gridPanel.Invalidate();
             //}
-        }
-
-        private void nextToToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RunTo runto = new RunTo();
-            if (DialogResult.OK == runto.ShowDialog())
-            {
-                int x = 10;
-            }
         }
     }
 }

@@ -52,28 +52,5 @@ namespace MainGame
                 btnCellColor.BackColor = dlg.Color;
             }
         }
-
-        public int xAxis
-        {
-            get
-            {
-                return (int)nudXAxis.Value;
-            }
-            set
-            {
-                nudXAxis.Value = value;
-            }
-        }
-        public int yAxis
-        {
-            get
-            {
-                return (int)nudYAxis.Value;
-            }
-            set
-            {
-                nudYAxis.Value = value;
-            }
-        }
     }
 }
