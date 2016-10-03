@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -231,6 +232,10 @@ namespace MainGame
         {
             PressNewButton();
         }
+        private void tsmiClear_Click(object sender, EventArgs e)
+        {
+            PressNewButton();
+        }
         private void PressNewButton()
         {
             for (int x = 0; x < universe.GetLength(0); x++)
@@ -254,6 +259,10 @@ namespace MainGame
             timer.Start();
         }
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            timer.Start();
+        }
+        private void tsmiStart_Click(object sender, EventArgs e)
         {
             timer.Start();
         }
@@ -415,6 +424,11 @@ namespace MainGame
         {
             timer.Stop();
         }
+        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            timer.Stop();
+        }
+       
 
         private void tsmExit_Click_1(object sender, EventArgs e)
         {
@@ -429,22 +443,54 @@ namespace MainGame
         {
             NextGeneration();
         }
+        private void tsmiNext_Click(object sender, EventArgs e)
+        {
+            NextGeneration();
+        }
 
         private void viewGrid_Click(object sender, EventArgs e)
         {
+            toggleGrid();
+        }
+        private void gridVisibleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toggleGrid();
+        }
+        private void toggleGrid()
+        {
             if (viewGrid.Checked)
+            {
                 viewGrid.Checked = false;
+                gridVisibleToolStripMenuItem.Checked = false;
+            }
             else
+            {
                 viewGrid.Checked = true;
+                gridVisibleToolStripMenuItem.Checked = true;
+            }
             gridPanel.Invalidate();
         }
 
         private void viewNeighbor_Click(object sender, EventArgs e)
         {
+            toggleNeighborCount();
+        }
+        private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toggleNeighborCount();
+        }
+        private void toggleNeighborCount()
+        {
             if (viewNeighbor.Checked)
+            {
                 viewNeighbor.Checked = false;
+                neighborCountToolStripMenuItem.Checked = false;
+            }
             else
+            {
                 viewNeighbor.Checked = true;
+                neighborCountToolStripMenuItem.Checked = true;
+            }
 
             gridPanel.Invalidate();
         }
@@ -477,7 +523,6 @@ namespace MainGame
                 gridColor = opt.gridColors;
                 cellColor = opt.cellColors;
                 gridPanel.BackColor = opt.backgroundColors;
-                int x = 10;
             }
             CreateUniverse();
             gridPanel.Invalidate();
@@ -485,26 +530,34 @@ namespace MainGame
 
         private void fromNewSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            int newSeed;
             Seed seed = new Seed();
 
             if (DialogResult.OK == seed.ShowDialog())
             {
-                int x = 10;
+
             }
         }
 
         private void fromCurrentSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Seed seed = new Seed();
-            //for (int x = 0; x < universe.GetLength(0); x++)
-            //{
-            //    for (int y = 0; y < universe.GetLength(1); y++)
-            //    {
-            //        if (RNG.Next() % 3 == 0)
-            //            universe[x, y].toggleAlive();
-            //    }
-            //    gridPanel.Invalidate();
-            //}
+            Random RNGSeed = new Random(seed.worldSeed);
+            for (int x = 0; x < universe.GetLength(0); x++)
+            {
+                for (int y = 0; y < universe.GetLength(1); y++)
+                {
+                    if (RNGSeed.Next() % 3 == 0)
+                        universe[x, y].toggleAlive();
+                }
+                gridPanel.Invalidate();
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //StreamReader sr = new StreamReader(;
+
         }
     }
 }

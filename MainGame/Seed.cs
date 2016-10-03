@@ -17,12 +17,24 @@ namespace MainGame
         public Seed()
         {
             InitializeComponent();
-            nudSeed.Value = RNG.Next(100000000, 999999999);
+            nudSeed.Value = 555555555;
         }
 
         private void btnRandomSeed_Click(object sender, EventArgs e)
         {
             nudSeed.Value = RNG.Next(100000000, 999999999);
+        }
+
+        public int worldSeed
+        {
+            get
+            {
+                return (int)nudSeed.Value;
+            }
+            set
+            {
+                nudSeed.Value = value;
+            }
         }
     }
 }
