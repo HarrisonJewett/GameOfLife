@@ -27,7 +27,7 @@ namespace MainGame
 
     public partial class Form1 : Form
     {
-        
+
         //Cells[,] hell = new Cells[25, 25];
 
         Color gridColor = Color.AliceBlue;
@@ -47,7 +47,7 @@ namespace MainGame
         int ySize = 30;
 
         Cells[,] universe;
-            //= new Cells[30,30];
+        //= new Cells[30,30];
 
 
         //initializing code and setting timer
@@ -55,7 +55,7 @@ namespace MainGame
         {
             InitializeComponent();
 
-            universe = new Cells[xSize,ySize];
+            universe = new Cells[xSize, ySize];
 
 
             //Only paint in wm.paint
@@ -71,7 +71,7 @@ namespace MainGame
             timer.Tick += Timer_Tick;
             timer.Interval = 50;
 
-            
+
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -101,7 +101,7 @@ namespace MainGame
             {
                 for (int y = 0; y < universe.GetLength(1); y++)
                 {
-                    
+
                     if (universe[x, y].getAlive())
                     {
                         if (universe[x, y].getNeighbors() < 2 || universe[x, y].getNeighbors() > 3)
@@ -130,10 +130,21 @@ namespace MainGame
         /*
          * Paint Section
          */
-         
+
         //Render the grid to the window
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
+            //universe = new Cells[xSize, ySize];
+
+
+            ////Only paint in wm.paint
+            //for (int x = 0; x < universe.GetLength(0); x++)
+            //{
+            //    for (int y = 0; y < universe.GetLength(1); y++)
+            //    {
+            //        universe[x, y] = new Cells(x, y);
+            //    }
+            //}
             cellCount = 0;
             //Use floats
             float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
@@ -238,6 +249,10 @@ namespace MainGame
         {
             PressNewButton();
         }
+        private void tsmiClear_Click(object sender, EventArgs e)
+        {
+            PressNewButton();
+        }
         private void PressNewButton()
         {
             for (int x = 0; x < universe.GetLength(0); x++)
@@ -264,6 +279,10 @@ namespace MainGame
         {
             timer.Start();
         }
+        private void tsmiStart_Click(object sender, EventArgs e)
+        {
+            timer.Start();
+        }
 
         private bool global = true;
 
@@ -271,10 +290,6 @@ namespace MainGame
         //Mouse clicking code
         //Making it so you can drago to turn cells on
         //Clicking a cell will change it
-        private void GridPanel_MouseClick(object sender, MouseEventArgs e)
-        {
-        }
-
         private void gridPanel_MouseMove(object sender, MouseEventArgs e)
         {
             float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
@@ -314,8 +329,6 @@ namespace MainGame
 
             }
         }
-
-
         //End of mouse clicking and dragging code
 
 
@@ -422,6 +435,10 @@ namespace MainGame
         {
             timer.Stop();
         }
+        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            timer.Stop();
+        }
 
         private void tsmExit_Click_1(object sender, EventArgs e)
         {
@@ -436,23 +453,54 @@ namespace MainGame
         {
             NextGeneration();
         }
+        private void tsmiNext_Click(object sender, EventArgs e)
+        {
+            NextGeneration();
+        }
 
         private void viewGrid_Click(object sender, EventArgs e)
         {
+            toggleGrid();
+        }
+        private void gridVisibleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toggleGrid();
+        }
+        private void toggleGrid()
+        {
             if (viewGrid.Checked)
+            {
                 viewGrid.Checked = false;
+                gridVisibleToolStripMenuItem.Checked = false;
+            }
             else
+            {
                 viewGrid.Checked = true;
+                gridVisibleToolStripMenuItem.Checked = true;
+            }
             gridPanel.Invalidate();
         }
 
         private void viewNeighbor_Click(object sender, EventArgs e)
         {
+            toggleNeighborCount();
+        }
+        private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toggleNeighborCount();
+        }
+        private void toggleNeighborCount()
+        {
             if (viewNeighbor.Checked)
+            {
                 viewNeighbor.Checked = false;
+                neighborCountToolStripMenuItem.Checked = false;
+            }
             else
+            {
                 viewNeighbor.Checked = true;
-
+                neighborCountToolStripMenuItem.Checked = true;
+            }
             gridPanel.Invalidate();
         }
 
@@ -469,17 +517,21 @@ namespace MainGame
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Options opt = new Options();
-
+            opt.xAxis = universe.GetLength(0);
+            opt.yAxis = universe.GetLength(1);
             if (DialogResult.OK == opt.ShowDialog())
             {
+                xSize = opt.xAxis;
+                ySize = opt.yAxis;
                 int x = 10;
+                gridPanel.Invalidate();
             }
         }
 
         private void fromNewSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
             Seed seed = new Seed();
-
             if (DialogResult.OK == seed.ShowDialog())
             {
                 int x = 10;
@@ -498,6 +550,15 @@ namespace MainGame
             //    }
             //    gridPanel.Invalidate();
             //}
+        }
+
+        private void nextToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunTo runto = new RunTo();
+            if (DialogResult.OK == runto.ShowDialog())
+            {
+                int x = 10;
+            }
         }
     }
 }
