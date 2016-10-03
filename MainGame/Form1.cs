@@ -10,9 +10,24 @@ using System.Windows.Forms;
 
 namespace MainGame
 {
+    //Choosing color
+    /*
+      Need to initilize the dialog box to show the current color
+      ColorDialog dlg = new ColorDialog();
+
+        dlg.Color = panel1.BackColor;
+
+        //Clicking close on the top right is the same as hitting cancel
+        //Doesn't do anything if cancel is hit, saves the changes if ok is hit
+        if(DialogResult.OK == dlg.showdialog();
+        {
+            panel1.BackColor = dlg.Color;
+        }
+        */
+
     public partial class Form1 : Form
     {
-        Cells[,] universe = new Cells[35, 35];
+        
         //Cells[,] hell = new Cells[25, 25];
 
         Color gridColor = Color.AliceBlue;
@@ -22,18 +37,27 @@ namespace MainGame
 
         Random RNG = new Random();
 
-
         Timer timer = new Timer();
 
         //Keeps track of how many generations there have been
         int Generations = 0;
-
         int cellCount = 0;
+
+        int xSize = 30;
+        int ySize = 30;
+
+        Cells[,] universe;
+            //= new Cells[30,30];
+
 
         //initializing code and setting timer
         public Form1()
         {
             InitializeComponent();
+
+            universe = new Cells[xSize,ySize];
+
+
             //Only paint in wm.paint
             for (int x = 0; x < universe.GetLength(0); x++)
             {
@@ -234,7 +258,10 @@ namespace MainGame
         //Clicking play
         private void tsbPlay_Click(object sender, EventArgs e)
         {
-            //clears the box for some reason
+            timer.Start();
+        }
+        private void startToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             timer.Start();
         }
 
@@ -257,7 +284,7 @@ namespace MainGame
             {
                 int x = (int)(e.X / width);
                 int y = (int)(e.Y / height);
-                if (x > 0 && x < universe.GetLength(0) && y > 0 && y < universe.GetLength(1))
+                if (x >= 0 && x < universe.GetLength(0) && y >= 0 && y < universe.GetLength(1))
                 {
                     if (global)
                         universe[x, y].setAliveTrue();
@@ -278,7 +305,7 @@ namespace MainGame
                 int x = (int)(e.X / width);
                 int y = (int)(e.Y / height);
 
-                if (x > 0 && x < universe.GetLength(0) && y > 0 && y < universe.GetLength(1))
+                if (x >= 0 && x < universe.GetLength(0) && y >= 0 && y < universe.GetLength(1))
                 {
                     global = !universe[x, y].getAlive();
                     universe[x, y].toggleAlive();
@@ -391,6 +418,10 @@ namespace MainGame
         {
             timer.Stop();
         }
+        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            timer.Stop();
+        }
 
         private void tsmExit_Click_1(object sender, EventArgs e)
         {
@@ -401,18 +432,9 @@ namespace MainGame
         {
             NextGeneration();
         }
-
-        private void toolsRandomize_Click(object sender, EventArgs e)
+        private void nextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            for (int x = 0; x < universe.GetLength(0); x++)
-            {
-                for (int y = 0; y < universe.GetLength(1); y++)
-                {
-                    if (RNG.Next() % 3 == 0)
-                        universe[x, y].toggleAlive();
-                }
-                gridPanel.Invalidate();
-            }
+            NextGeneration();
         }
 
         private void viewGrid_Click(object sender, EventArgs e)
@@ -443,6 +465,39 @@ namespace MainGame
 
             gridPanel.Invalidate();
         }
-        
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Options opt = new Options();
+
+            if (DialogResult.OK == opt.ShowDialog())
+            {
+                int x = 10;
+            }
+        }
+
+        private void fromNewSeedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Seed seed = new Seed();
+
+            if (DialogResult.OK == seed.ShowDialog())
+            {
+                int x = 10;
+            }
+        }
+
+        private void fromCurrentSeedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Seed seed = new Seed();
+            //for (int x = 0; x < universe.GetLength(0); x++)
+            //{
+            //    for (int y = 0; y < universe.GetLength(1); y++)
+            //    {
+            //        if (RNG.Next() % 3 == 0)
+            //            universe[x, y].toggleAlive();
+            //    }
+            //    gridPanel.Invalidate();
+            //}
+        }
     }
 }
