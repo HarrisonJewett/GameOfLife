@@ -27,16 +27,11 @@ namespace MainGame
 
     public partial class Form1 : Form
     {
-        
-        //Cells[,] hell = new Cells[25, 25];
+        Color gridColor = Color.PaleGoldenrod;
+        Color cellColor = Color.Blue;
 
-        Color gridColor = Color.AliceBlue;
-        Brush gridBrush = new SolidBrush(Color.Blue);
-        Brush aliveBrush = new SolidBrush(Color.ForestGreen);
-        Brush deadBrush = new SolidBrush(Color.Red);
 
         Random RNG = new Random();
-
         Timer timer = new Timer();
 
         //Keeps track of how many generations there have been
@@ -47,7 +42,6 @@ namespace MainGame
         int ySize = 30;
 
         Cells[,] universe;
-            //= new Cells[30,30];
 
 
         //initializing code and setting timer
@@ -55,8 +49,15 @@ namespace MainGame
         {
             InitializeComponent();
 
-            universe = new Cells[xSize,ySize];
+            CreateUniverse();
 
+            //Set Timer
+            timer.Tick += Timer_Tick;
+            timer.Interval = 50;
+        }
+        public void CreateUniverse()
+        {
+            universe = new Cells[xSize, ySize];
 
             //Only paint in wm.paint
             for (int x = 0; x < universe.GetLength(0); x++)
@@ -66,13 +67,8 @@ namespace MainGame
                     universe[x, y] = new Cells(x, y);
                 }
             }
-
-            //Set Timer
-            timer.Tick += Timer_Tick;
-            timer.Interval = 50;
-
-            
         }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             //Create
@@ -81,10 +77,8 @@ namespace MainGame
 
             //Repainting the window every timer interval
             gridPanel.Invalidate();
-
         }
         //end timer code
-
 
 
         //creat life simulation
@@ -101,20 +95,15 @@ namespace MainGame
             {
                 for (int y = 0; y < universe.GetLength(1); y++)
                 {
-                    
                     if (universe[x, y].getAlive())
                     {
                         if (universe[x, y].getNeighbors() < 2 || universe[x, y].getNeighbors() > 3)
-                        {
                             universe[x, y].toggleAlive();
-                        }
                     }
                     else
                     {
                         if (universe[x, y].getNeighbors() == 3)
-                        {
                             universe[x, y].toggleAlive();
-                        }
                     }
                 }
             }
@@ -130,10 +119,15 @@ namespace MainGame
         /*
          * Paint Section
          */
-         
+
         //Render the grid to the window
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
+
+            Brush gridBrush = new SolidBrush(cellColor);
+            Brush aliveBrush = new SolidBrush(Color.ForestGreen);
+            Brush deadBrush = new SolidBrush(Color.Red);
+
             cellCount = 0;
             //Use floats
             float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
@@ -143,7 +137,6 @@ namespace MainGame
             //Creating a new pen and setting the color to the variable gridColor
             Pen gridPen = new Pen(gridColor, 1);
             Point gridPoint = new Point();
-
 
             resetNeighbors();
             if (viewGrid.Checked)
@@ -469,11 +462,25 @@ namespace MainGame
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Options opt = new Options();
+            opt.xAxis = xSize;
+            opt.yAxis = ySize;
+            opt.milTimer = timer.Interval;
+            opt.gridColors = gridColor;
+            opt.cellColors = cellColor;
+            opt.backgroundColors = gridPanel.BackColor;
 
             if (DialogResult.OK == opt.ShowDialog())
             {
+                xSize = opt.xAxis;
+                ySize = opt.yAxis;
+                timer.Interval = opt.milTimer;
+                gridColor = opt.gridColors;
+                cellColor = opt.cellColors;
+                gridPanel.BackColor = opt.backgroundColors;
                 int x = 10;
             }
+            CreateUniverse();
+            gridPanel.Invalidate();
         }
 
         private void fromNewSeedToolStripMenuItem_Click(object sender, EventArgs e)
