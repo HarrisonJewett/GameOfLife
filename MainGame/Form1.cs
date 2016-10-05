@@ -428,7 +428,7 @@ namespace MainGame
         {
             timer.Stop();
         }
-       
+
 
         private void tsmExit_Click_1(object sender, EventArgs e)
         {
@@ -556,8 +556,107 @@ namespace MainGame
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //StreamReader sr = new StreamReader(;
-
+            openFile();
         }
+        private void openToolStripButton_Click(object sender, EventArgs e)
+        {
+            openFile();
+        }
+        private void openFile()
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2;
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                StreamReader reader = new StreamReader(dlg.FileName);
+
+                int fileWidth = 0;
+                int fileHeight = 0;
+
+                //Getting the size of the universe
+                while (!reader.EndOfStream)
+                {
+                    string row = reader.ReadLine();
+
+                    if (row[0] != '!')
+                    {
+                        fileHeight++;
+                        fileWidth = row.Length;
+                    }
+                }
+
+                universe = new Cells[fileWidth, fileHeight];
+                for (int y = 0; y < fileHeight; y++)
+                {
+                    for (int x = 0; x < fileWidth; x++)
+                    {
+                        universe[x, y] = new Cells();
+                    }
+                }
+
+                reader.BaseStream.Seek(0, SeekOrigin.Begin);
+
+                // Reading cells
+                int rowNum = 0;
+                while (!reader.EndOfStream)
+                {
+                    string row = reader.ReadLine();
+                    
+                    if (row[0] != '!')
+                    {
+                        for (int xPos = 0; xPos < row.Length; xPos++)
+                        {
+                            if (row[xPos] == '0')
+                                universe[xPos, rowNum].setAliveTrue();
+                            else if (row[xPos] == '.')
+                                universe[xPos, rowNum].setAliveFalse();
+                        }
+                        rowNum++;
+                    }
+                    
+                }
+                reader.Close();
+            }
+        }
+
+        private void saveToolStripButton_Click(object sender, EventArgs e)
+        {
+            saveFile();
+        }
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFile();
+        }
+        private void saveFile()
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2; dlg.DefaultExt = "cells";
+
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                StreamWriter writer = new StreamWriter(dlg.FileName);                
+                
+                for (int y = 0; y < universe.GetLength(1); y++)
+                {
+                    String currentRow = string.Empty;
+                    
+                    for (int x = 0; x < universe.GetLength(0); x++)
+                    {
+                        if (universe[x,y].getAlive() == true)
+                            currentRow += ('0');
+                        else
+                            currentRow += ('.');
+                    }
+                    writer.WriteLine(currentRow);
+                }                
+                writer.Close();
+            }
+        }
+
+        
     }
 }
