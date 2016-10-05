@@ -34,6 +34,9 @@ namespace MainGame
 
         Random RNG = new Random();
         Timer timer = new Timer();
+        Seed seed = new Seed();
+        Random RNGSeed;
+        int currentSeed;
 
         //Keeps track of how many generations there have been
         int Generations = 0;
@@ -128,6 +131,10 @@ namespace MainGame
             Brush gridBrush = new SolidBrush(cellColor);
             Brush aliveBrush = new SolidBrush(Color.ForestGreen);
             Brush deadBrush = new SolidBrush(Color.Red);
+
+            currentSeed = seed.worldSeed;
+            RNGSeed = new Random(currentSeed);
+
 
             cellCount = 0;
             //Use floats
@@ -313,7 +320,6 @@ namespace MainGame
                     universe[x, y].toggleAlive();
                 }
                 gridPanel.Invalidate();
-
             }
         }
 
@@ -530,28 +536,29 @@ namespace MainGame
 
         private void fromNewSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int newSeed;
-            Seed seed = new Seed();
-
+            seed.worldSeed = currentSeed;
             if (DialogResult.OK == seed.ShowDialog())
             {
-
+                currentSeed = seed.worldSeed;
             }
+            PressNewButton();
+            randomizeWorld();
         }
-
         private void fromCurrentSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Seed seed = new Seed();
-            Random RNGSeed = new Random(seed.worldSeed);
+            randomizeWorld();
+        }
+        private void randomizeWorld()
+        {
             for (int x = 0; x < universe.GetLength(0); x++)
             {
                 for (int y = 0; y < universe.GetLength(1); y++)
                 {
                     if (RNGSeed.Next() % 3 == 0)
-                        universe[x, y].toggleAlive();
+                        universe[x, y].setAliveTrue();
                 }
-                gridPanel.Invalidate();
             }
+            gridPanel.Invalidate();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -657,6 +664,16 @@ namespace MainGame
             }
         }
 
-        
+        private void nextToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunTo run = new RunTo();
+            run.runNumber = Generations - 1;
+
+            if (DialogResult.OK == run.ShowDialog())
+            {
+                for (int i = Generations; i < run.runNumber; i++)
+                    NextGeneration();
+            }
+        }
     }
 }
