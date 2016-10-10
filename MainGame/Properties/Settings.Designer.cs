@@ -25,6 +25,7 @@ namespace MainGame.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
         public int TimeGap {
             get {
                 return ((int)(this["TimeGap"]));
@@ -36,6 +37,7 @@ namespace MainGame.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
         public int xAxisSize {
             get {
                 return ((int)(this["xAxisSize"]));
@@ -47,6 +49,7 @@ namespace MainGame.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
         public int yAxisSize {
             get {
                 return ((int)(this["yAxisSize"]));
@@ -58,6 +61,7 @@ namespace MainGame.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("White")]
         public global::System.Drawing.Color GridLinesColor {
             get {
                 return ((global::System.Drawing.Color)(this["GridLinesColor"]));
@@ -69,6 +73,7 @@ namespace MainGame.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Gray")]
         public global::System.Drawing.Color GridBackground {
             get {
                 return ((global::System.Drawing.Color)(this["GridBackground"]));
@@ -80,6 +85,7 @@ namespace MainGame.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Green")]
         public global::System.Drawing.Color AliveCellColor {
             get {
                 return ((global::System.Drawing.Color)(this["AliveCellColor"]));
@@ -91,7 +97,7 @@ namespace MainGame.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool universeType {
             get {
                 return ((bool)(this["universeType"]));

@@ -38,7 +38,7 @@ namespace MainGame
         Random RNGSeed;
         int currentSeed;
 
-        Options opt;
+        Options opt = new Options();
 
         //Keeps track of how many generations there have been
         int Generations = 0;
@@ -56,11 +56,23 @@ namespace MainGame
         {
             InitializeComponent();
 
+            //Loading settings
+            opt.milTimer = Properties.Settings.Default.TimeGap;
+            opt.xAxis = Properties.Settings.Default.xAxisSize;
+            opt.yAxis = Properties.Settings.Default.yAxisSize;
+            opt.gridColors = Properties.Settings.Default.GridLinesColor;
+            opt.backgroundColors = Properties.Settings.Default.GridBackground;
+            opt.cellColors = Properties.Settings.Default.AliveCellColor;
+            universeFinite = Properties.Settings.Default.universeType;
+
+
             CreateUniverse();
 
             //Set Timer
             timer.Tick += Timer_Tick;
             timer.Interval = 50;
+
+            
         }
         public void CreateUniverse()
         {
@@ -627,7 +639,7 @@ namespace MainGame
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            opt = new Options();
+            
             opt.xAxis = xSize;
             opt.yAxis = ySize;
             opt.milTimer = timer.Interval;
@@ -810,7 +822,6 @@ namespace MainGame
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Properties.Settings.Default.Save();
             Properties.Settings.Default.TimeGap = opt.milTimer;
             Properties.Settings.Default.xAxisSize = opt.xAxis;
             Properties.Settings.Default.yAxisSize = opt.yAxis;
@@ -818,6 +829,7 @@ namespace MainGame
             Properties.Settings.Default.GridBackground = opt.backgroundColors;
             Properties.Settings.Default.AliveCellColor = opt.cellColors;
             Properties.Settings.Default.universeType = universeFinite;
+            Properties.Settings.Default.Save();
         }
     }
 }
