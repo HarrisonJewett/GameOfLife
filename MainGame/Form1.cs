@@ -648,20 +648,36 @@ namespace MainGame
             gridPanel.Invalidate();
         }
 
+        private void fromTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PressNewButton();
+            for (int x = 0; x < universe.GetLength(0); x++)
+            {
+                for (int y = 0; y < universe.GetLength(1); y++)
+                {
+                    if (RNG.Next() % 3 == 0)
+                        universe[x, y].setAliveTrue();
+                }
+            }
+            gridPanel.Invalidate();
+        }
         private void fromNewSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
             seed.worldSeed = currentSeed;
             if (DialogResult.OK == seed.ShowDialog())
             {
                 currentSeed = seed.worldSeed;
+                PressNewButton();
+                RNGSeed = new Random(currentSeed);
+                randomizeWorld();
             }
-            PressNewButton();
-            randomizeWorld();
         }
         private void fromCurrentSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            PressNewButton();
             randomizeWorld();
         }
+
         private void randomizeWorld()
         {
             for (int x = 0; x < universe.GetLength(0); x++)
@@ -788,6 +804,6 @@ namespace MainGame
                 for (int i = Generations; i < run.runNumber; i++)
                     NextGeneration();
             }
-        }
+        }        
     }
 }
