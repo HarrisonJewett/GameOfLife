@@ -8,22 +8,96 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MainGame.Properties
-{
-
-
+namespace MainGame.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public int TimeGap {
+            get {
+                return ((int)(this["TimeGap"]));
+            }
+            set {
+                this["TimeGap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public int xAxisSize {
+            get {
+                return ((int)(this["xAxisSize"]));
+            }
+            set {
+                this["xAxisSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public int yAxisSize {
+            get {
+                return ((int)(this["yAxisSize"]));
+            }
+            set {
+                this["yAxisSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Color GridLinesColor {
+            get {
+                return ((global::System.Drawing.Color)(this["GridLinesColor"]));
+            }
+            set {
+                this["GridLinesColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Color GridBackground {
+            get {
+                return ((global::System.Drawing.Color)(this["GridBackground"]));
+            }
+            set {
+                this["GridBackground"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Color AliveCellColor {
+            get {
+                return ((global::System.Drawing.Color)(this["AliveCellColor"]));
+            }
+            set {
+                this["AliveCellColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool universeType {
+            get {
+                return ((bool)(this["universeType"]));
+            }
+            set {
+                this["universeType"] = value;
             }
         }
     }

@@ -252,7 +252,7 @@
             this.fromCurrentSeedToolStripMenuItem,
             this.fromNewSeedToolStripMenuItem});
             this.toolsRandomize.Name = "toolsRandomize";
-            this.toolsRandomize.Size = new System.Drawing.Size(152, 22);
+            this.toolsRandomize.Size = new System.Drawing.Size(133, 22);
             this.toolsRandomize.Text = "Randomize";
             // 
             // fromTimeToolStripMenuItem
@@ -279,14 +279,14 @@
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // toolStrip1
@@ -486,7 +486,7 @@
             this.gridPanel.ContextMenuStrip = this.cmsMain;
             this.gridPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridPanel.Location = new System.Drawing.Point(0, 51);
-            this.gridPanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gridPanel.Margin = new System.Windows.Forms.Padding(2);
             this.gridPanel.Name = "gridPanel";
             this.gridPanel.Size = new System.Drawing.Size(464, 406);
             this.gridPanel.TabIndex = 3;
@@ -506,9 +506,10 @@
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.stsMain);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Game Of Life";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);

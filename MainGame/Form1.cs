@@ -38,6 +38,8 @@ namespace MainGame
         Random RNGSeed;
         int currentSeed;
 
+        Options opt;
+
         //Keeps track of how many generations there have been
         int Generations = 0;
         int cellCount = 0;
@@ -625,7 +627,7 @@ namespace MainGame
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Options opt = new Options();
+            opt = new Options();
             opt.xAxis = xSize;
             opt.yAxis = ySize;
             opt.milTimer = timer.Interval;
@@ -804,6 +806,18 @@ namespace MainGame
                 for (int i = Generations; i < run.runNumber; i++)
                     NextGeneration();
             }
-        }        
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Properties.Settings.Default.Save();
+            Properties.Settings.Default.TimeGap = opt.milTimer;
+            Properties.Settings.Default.xAxisSize = opt.xAxis;
+            Properties.Settings.Default.yAxisSize = opt.yAxis;
+            Properties.Settings.Default.GridLinesColor = opt.gridColors;
+            Properties.Settings.Default.GridBackground = opt.backgroundColors;
+            Properties.Settings.Default.AliveCellColor = opt.cellColors;
+            Properties.Settings.Default.universeType = universeFinite;
+        }
     }
 }
