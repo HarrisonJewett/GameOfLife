@@ -55,14 +55,14 @@ namespace MainGame
         public Form1()
         {
             InitializeComponent();
-
+            
             //Loading settings
-            opt.milTimer = Properties.Settings.Default.TimeGap;
-            opt.xAxis = Properties.Settings.Default.xAxisSize;
-            opt.yAxis = Properties.Settings.Default.yAxisSize;
-            opt.gridColors = Properties.Settings.Default.GridLinesColor;
-            opt.backgroundColors = Properties.Settings.Default.GridBackground;
-            opt.cellColors = Properties.Settings.Default.AliveCellColor;
+            timer.Interval = Properties.Settings.Default.TimeGap;
+            xSize = Properties.Settings.Default.xAxisSize;
+            ySize = Properties.Settings.Default.yAxisSize;
+            gridColor = Properties.Settings.Default.GridLinesColor;
+            gridPanel.BackColor = Properties.Settings.Default.GridBackground;
+            cellColor = Properties.Settings.Default.AliveCellColor;
             universeFinite = Properties.Settings.Default.universeType;
 
 
@@ -70,7 +70,6 @@ namespace MainGame
 
             //Set Timer
             timer.Tick += Timer_Tick;
-            timer.Interval = 50;
 
             
         }
@@ -139,7 +138,7 @@ namespace MainGame
          * Paint Section
          */
 
-        //Render the grid to the window
+            //Render the grid to the window
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
 
@@ -822,12 +821,23 @@ namespace MainGame
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Properties.Settings.Default.TimeGap = opt.milTimer;
+            /*
+             * Properties.Settings.Default.TimeGap = opt.milTimer;
             Properties.Settings.Default.xAxisSize = opt.xAxis;
             Properties.Settings.Default.yAxisSize = opt.yAxis;
             Properties.Settings.Default.GridLinesColor = opt.gridColors;
             Properties.Settings.Default.GridBackground = opt.backgroundColors;
             Properties.Settings.Default.AliveCellColor = opt.cellColors;
+            Properties.Settings.Default.universeType = universeFinite;
+            Properties.Settings.Default.Save();
+            */
+
+            Properties.Settings.Default.TimeGap = timer.Interval;
+            Properties.Settings.Default.xAxisSize = xSize;
+            Properties.Settings.Default.yAxisSize = ySize;
+            Properties.Settings.Default.GridLinesColor = gridColor;
+            Properties.Settings.Default.GridBackground = gridPanel.BackColor;
+            Properties.Settings.Default.AliveCellColor = cellColor;
             Properties.Settings.Default.universeType = universeFinite;
             Properties.Settings.Default.Save();
         }

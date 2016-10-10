@@ -37,7 +37,7 @@ namespace MainGame.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
         public int xAxisSize {
             get {
                 return ((int)(this["xAxisSize"]));
