@@ -45,6 +45,7 @@ namespace MainGame
         int xSize = 30;
         int ySize = 30;
 
+        bool universeFinite = true;
         Cells[,] universe;
 
 
@@ -332,83 +333,194 @@ namespace MainGame
         {
             if (universe[X, Y].getAlive() == true)
             {
-                if (X > 0 && Y > 0 && X < universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1)
+                if (universeFinite)
                 {
-                    universe[X - 1, Y - 1].setNeighbor(1);
-                    universe[X - 1, Y].setNeighbor(1);
-                    universe[X - 1, Y + 1].setNeighbor(1);
-                    universe[X, Y - 1].setNeighbor(1);
-                    universe[X, Y + 1].setNeighbor(1);
-                    universe[X + 1, Y - 1].setNeighbor(1);
-                    universe[X + 1, Y].setNeighbor(1);
-                    universe[X + 1, Y + 1].setNeighbor(1);
+
+                    if (X > 0 && Y > 0 && X < universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1)
+                    {
+                        universe[X - 1, Y - 1].setNeighbor(1);
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[X - 1, Y + 1].setNeighbor(1);
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                        universe[X + 1, Y - 1].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                        universe[X + 1, Y + 1].setNeighbor(1);
+                    }
+                    else if (X == 0 && Y > 0 && Y < universe.GetLength(1) - 1)
+                    {
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                        universe[X + 1, Y - 1].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                        universe[X + 1, Y + 1].setNeighbor(1);
+                    }
+                    else if (X == 0 && Y == 0)
+                    {
+                        universe[X, Y + 1].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                        universe[X + 1, Y + 1].setNeighbor(1);
+                    }
+                    else if (Y == 0 && X < universe.GetLength(0) - 1)
+                    {
+                        universe[X + 1, Y + 1].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                        universe[X - 1, Y + 1].setNeighbor(1);
+                        universe[X - 1, Y].setNeighbor(1);
+                    }
+                    else if (X == 0 & Y == universe.GetLength(1) - 1)
+                    {
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[X + 1, Y - 1].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                    }
+                    else if (X == universe.GetLength(0) - 1 && Y == 0)
+                    {
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[X - 1, Y + 1].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                    }
+                    else if (X == universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1)
+                    {
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[X - 1, Y - 1].setNeighbor(1);
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[X - 1, Y + 1].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                    }
+                    else if (X == universe.GetLength(0) - 1 && Y == universe.GetLength(1) - 1)
+                    {
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[X - 1, Y - 1].setNeighbor(1);
+                        universe[X - 1, Y].setNeighbor(1);
+                    }
+                    else if (X == universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1 && Y > 0)
+                    {
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[X - 1, Y + 1].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                        universe[X + 1, Y + 1].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                    }
+                    else if (Y == universe.GetLength(1) - 1 && X < universe.GetLength(0) - 1 && X > 0)
+                    {
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[X - 1, Y - 1].setNeighbor(1);
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[X + 1, Y - 1].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                    }
                 }
-                else if (X == 0 && Y > 0 && Y < universe.GetLength(1) - 1)
+
+                else
                 {
-                    universe[X, Y - 1].setNeighbor(1);
-                    universe[X, Y + 1].setNeighbor(1);
-                    universe[X + 1, Y - 1].setNeighbor(1);
-                    universe[X + 1, Y].setNeighbor(1);
-                    universe[X + 1, Y + 1].setNeighbor(1);
-                }
-                else if (X == 0 && Y == 0)
-                {
-                    universe[X, Y + 1].setNeighbor(1);
-                    universe[X + 1, Y].setNeighbor(1);
-                    universe[X + 1, Y + 1].setNeighbor(1);
-                }
-                else if (Y == 0 && X < universe.GetLength(0) - 1)
-                {
-                    universe[X + 1, Y + 1].setNeighbor(1);
-                    universe[X + 1, Y].setNeighbor(1);
-                    universe[X, Y + 1].setNeighbor(1);
-                    universe[X - 1, Y + 1].setNeighbor(1);
-                    universe[X - 1, Y].setNeighbor(1);
-                }
-                else if (X == 0 & Y == universe.GetLength(1) - 1)
-                {
-                    universe[X, Y - 1].setNeighbor(1);
-                    universe[X + 1, Y - 1].setNeighbor(1);
-                    universe[X + 1, Y].setNeighbor(1);
-                }
-                else if (X == universe.GetLength(0) - 1 && Y == 0)
-                {
-                    universe[X - 1, Y].setNeighbor(1);
-                    universe[X - 1, Y + 1].setNeighbor(1);
-                    universe[X, Y + 1].setNeighbor(1);
-                }
-                else if (X == universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1)
-                {
-                    universe[X, Y - 1].setNeighbor(1);
-                    universe[X - 1, Y - 1].setNeighbor(1);
-                    universe[X - 1, Y].setNeighbor(1);
-                    universe[X - 1, Y + 1].setNeighbor(1);
-                    universe[X, Y + 1].setNeighbor(1);
-                }
-                else if (X == universe.GetLength(0) - 1 && Y == universe.GetLength(1) - 1)
-                {
-                    universe[X, Y - 1].setNeighbor(1);
-                    universe[X - 1, Y - 1].setNeighbor(1);
-                    universe[X - 1, Y].setNeighbor(1);
-                }
-                else if (X == universe.GetLength(0) - 1 && Y < universe.GetLength(1) - 1 && Y > 0)
-                {
-                    universe[X - 1, Y].setNeighbor(1);
-                    universe[X - 1, Y + 1].setNeighbor(1);
-                    universe[X, Y + 1].setNeighbor(1);
-                    universe[X + 1, Y + 1].setNeighbor(1);
-                    universe[X + 1, Y].setNeighbor(1);
-                }
-                else if (Y == universe.GetLength(1) - 1 && X < universe.GetLength(0) - 1 && X > 0)
-                {
-                    universe[X - 1, Y].setNeighbor(1);
-                    universe[X - 1, Y - 1].setNeighbor(1);
-                    universe[X, Y - 1].setNeighbor(1);
-                    universe[X + 1, Y - 1].setNeighbor(1);
-                    universe[X + 1, Y].setNeighbor(1);
+                    if (X == 0 && Y == 0)
+                    {
+                        universe[universe.GetLength(0) - 1, universe.GetLength(1) - 1].setNeighbor(1);
+                        universe[0, universe.GetLength(1) - 1].setNeighbor(1);
+                        universe[1, universe.GetLength(1) - 1].setNeighbor(1);
+                        universe[universe.GetLength(0) - 1, 0].setNeighbor(1);
+                        universe[1, 0].setNeighbor(1);
+                        universe[universe.GetLength(0) - 1, 1].setNeighbor(1);
+                        universe[0, 1].setNeighbor(1);
+                        universe[1, 1].setNeighbor(1);
+                    }
+                    else if (X < universe.GetLength(0) - 1 && Y == 0)
+                    {
+                        universe[X - 1, universe.GetLength(1) - 1].setNeighbor(1);
+                        universe[X, universe.GetLength(1) - 1].setNeighbor(1);
+                        universe[X + 1, universe.GetLength(1) - 1].setNeighbor(1);
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                        universe[X - 1, Y + 1].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                        universe[X + 1, Y + 1].setNeighbor(1);
+                    }
+                    else if (X == universe.GetLength(0) - 1 && Y == 0)
+                    {
+                        universe[X - 1, universe.GetLength(1) - 1].setNeighbor(1);
+                        universe[X, universe.GetLength(1) - 1].setNeighbor(1);
+                        universe[0, universe.GetLength(1) - 1].setNeighbor(1);
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[0, Y].setNeighbor(1);
+                        universe[X - 1, Y + 1].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                        universe[0, Y + 1].setNeighbor(1);
+                    }
+                    //End of top lines
+                    else if (X == 0 && Y < universe.GetLength(1) - 1)
+                    {
+                        universe[universe.GetLength(0) - 1, Y + 1].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                        universe[X + 1, Y + 1].setNeighbor(1);
+                        universe[universe.GetLength(0) - 1, Y].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                        universe[universe.GetLength(0) - 1, Y - 1].setNeighbor(1);
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[X + 1, Y - 1].setNeighbor(1);
+                    }
+                    else if (X > 0 && X < universe.GetLength(0) - 1 && Y > 0 && Y < universe.GetLength(1) - 1)
+                    {
+                        universe[X - 1, Y - 1].setNeighbor(1);
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[X - 1, Y + 1].setNeighbor(1);
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                        universe[X + 1, Y - 1].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                        universe[X + 1, Y + 1].setNeighbor(1);
+                    }
+                    else if (X == universe.GetLength(0) - 1 && Y > 0 && Y < universe.GetLength(1) - 1)
+                    {
+                        universe[X - 1, Y - 1].setNeighbor(1);
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[0, Y - 1].setNeighbor(1);
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[0, Y].setNeighbor(1);
+                        universe[X - 1, Y + 1].setNeighbor(1);
+                        universe[X, Y + 1].setNeighbor(1);
+                        universe[0, Y + 1].setNeighbor(1);
+                    }
+                    //End of middle
+                    else if (X == 0 && Y == universe.GetLength(1) - 1)
+                    {
+                        universe[universe.GetLength(0) - 1, Y - 1].setNeighbor(1);
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[X + 1, Y - 1].setNeighbor(1);
+                        universe[universe.GetLength(0) - 1, Y].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                        universe[universe.GetLength(0) - 1, 0].setNeighbor(1);
+                        universe[X, 0].setNeighbor(1);
+                        universe[X + 1, 0].setNeighbor(1);
+                    }
+                    else if (X < universe.GetLength(0) - 1 && Y == universe.GetLength(1) - 1)
+                    {
+                        universe[X - 1, Y - 1].setNeighbor(1);
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[X + 1, Y - 1].setNeighbor(1);
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[X + 1, Y].setNeighbor(1);
+                        universe[X - 1, 0].setNeighbor(1);
+                        universe[X, 0].setNeighbor(1);
+                        universe[X + 1, 0].setNeighbor(1);
+                    }
+                    else if (X == universe.GetLength(0) - 1 && Y == universe.GetLength(1) - 1)
+                    {
+                        universe[X - 1, Y - 1].setNeighbor(1);
+                        universe[X, Y - 1].setNeighbor(1);
+                        universe[0, Y - 1].setNeighbor(1);
+                        universe[X - 1, Y].setNeighbor(1);
+                        universe[0, Y].setNeighbor(1);
+                        universe[X - 1, 0].setNeighbor(1);
+                        universe[X, 0].setNeighbor(1);
+                        universe[0, 0].setNeighbor(1);
+                    }
                 }
             }
         }
+
+
 
         //Resets the neighbors so they don't keep counting everytime a new cell is made
         public void resetNeighbors()
@@ -520,6 +632,7 @@ namespace MainGame
             opt.gridColors = gridColor;
             opt.cellColors = cellColor;
             opt.backgroundColors = gridPanel.BackColor;
+            opt.universeType = universeFinite;
 
             if (DialogResult.OK == opt.ShowDialog())
             {
@@ -529,8 +642,9 @@ namespace MainGame
                 gridColor = opt.gridColors;
                 cellColor = opt.cellColors;
                 gridPanel.BackColor = opt.backgroundColors;
+                universeFinite = opt.universeType;
+                CreateUniverse();
             }
-            CreateUniverse();
             gridPanel.Invalidate();
         }
 
@@ -610,7 +724,7 @@ namespace MainGame
                 while (!reader.EndOfStream)
                 {
                     string row = reader.ReadLine();
-                    
+
                     if (row[0] != '!')
                     {
                         for (int xPos = 0; xPos < row.Length; xPos++)
@@ -622,7 +736,7 @@ namespace MainGame
                         }
                         rowNum++;
                     }
-                    
+
                 }
                 reader.Close();
             }
@@ -645,21 +759,21 @@ namespace MainGame
 
             if (DialogResult.OK == dlg.ShowDialog())
             {
-                StreamWriter writer = new StreamWriter(dlg.FileName);                
-                
+                StreamWriter writer = new StreamWriter(dlg.FileName);
+
                 for (int y = 0; y < universe.GetLength(1); y++)
                 {
                     String currentRow = string.Empty;
-                    
+
                     for (int x = 0; x < universe.GetLength(0); x++)
                     {
-                        if (universe[x,y].getAlive() == true)
+                        if (universe[x, y].getAlive() == true)
                             currentRow += ('0');
                         else
                             currentRow += ('.');
                     }
                     writer.WriteLine(currentRow);
-                }                
+                }
                 writer.Close();
             }
         }

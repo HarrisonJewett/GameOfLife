@@ -121,5 +121,20 @@ namespace MainGame
                 btnCellColor.BackColor = value;
             }
         }
+
+        public bool universeType
+        {
+            get
+            {
+                return rbtnFinite.Checked;
+            }
+            set
+            {
+                if (value)
+                    rbtnFinite.Checked = true;
+                else
+                    rbtnToroidal.Checked = true;
+            }
+        }
     }
 }
