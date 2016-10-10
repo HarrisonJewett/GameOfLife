@@ -11,21 +11,6 @@ using System.Windows.Forms;
 
 namespace MainGame
 {
-    //Choosing color
-    /*
-      Need to initilize the dialog box to show the current color
-      ColorDialog dlg = new ColorDialog();
-
-        dlg.Color = panel1.BackColor;
-
-        //Clicking close on the top right is the same as hitting cancel
-        //Doesn't do anything if cancel is hit, saves the changes if ok is hit
-        if(DialogResult.OK == dlg.showdialog();
-        {
-            panel1.BackColor = dlg.Color;
-        }
-        */
-
     public partial class Form1 : Form
     {
         Color gridColor = Color.PaleGoldenrod;
@@ -39,6 +24,7 @@ namespace MainGame
         int currentSeed;
 
         Options opt = new Options();
+        OpenFileDialog dlg = new OpenFileDialog();
 
         //Keeps track of how many generations there have been
         int Generations = 0;
@@ -55,15 +41,9 @@ namespace MainGame
         public Form1()
         {
             InitializeComponent();
-            
+
             //Loading settings
-            timer.Interval = Properties.Settings.Default.TimeGap;
-            xSize = Properties.Settings.Default.xAxisSize;
-            ySize = Properties.Settings.Default.yAxisSize;
-            gridColor = Properties.Settings.Default.GridLinesColor;
-            gridPanel.BackColor = Properties.Settings.Default.GridBackground;
-            cellColor = Properties.Settings.Default.AliveCellColor;
-            universeFinite = Properties.Settings.Default.universeType;
+            loadSettings();
 
 
             CreateUniverse();
@@ -73,6 +53,8 @@ namespace MainGame
 
             
         }
+
+        //Creating a new univers and making the cells not equal to null
         public void CreateUniverse()
         {
             universe = new Cells[xSize, ySize];
@@ -96,8 +78,6 @@ namespace MainGame
             //Repainting the window every timer interval
             gridPanel.Invalidate();
         }
-        //end timer code
-
 
         //creat life simulation
         private void NextGeneration()
@@ -131,23 +111,22 @@ namespace MainGame
             //Write the number of generations to the toolbox
             tssGenerationsNum.Text = "Generations: " + Generations.ToString();
         }
-        //end Next generation code
-
 
         /*
          * Paint Section
          */
-
             //Render the grid to the window
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
-
+            Brush hudBrush = new SolidBrush(Color.Black);
             Brush gridBrush = new SolidBrush(cellColor);
             Brush aliveBrush = new SolidBrush(Color.ForestGreen);
             Brush deadBrush = new SolidBrush(Color.Red);
 
             currentSeed = seed.worldSeed;
             RNGSeed = new Random(currentSeed);
+
+            Point hudPoint = new Point(5, gridPanel.ClientSize.Height / 20 * 16 );
 
 
             cellCount = 0;
@@ -159,6 +138,8 @@ namespace MainGame
             //Creating a new pen and setting the color to the variable gridColor
             Pen gridPen = new Pen(gridColor, 1);
             Point gridPoint = new Point();
+
+            
 
             resetNeighbors();
             if (viewGrid.Checked)
@@ -236,13 +217,24 @@ namespace MainGame
                     }
                 }
             }
+            if (viewHUD.Checked)
+            {
+                e.Graphics.DrawString("Generation: " + Generations, DefaultFont, hudBrush, hudPoint);
+                hudPoint.Y = gridPanel.Height / 20 * 17;
+                e.Graphics.DrawString("Cells: " + cellCount, DefaultFont, hudBrush, hudPoint);
+                hudPoint.Y = gridPanel.Height / 20 * 18;
+                if (universeFinite)
+                    e.Graphics.DrawString("Universe Type: Finite", DefaultFont, hudBrush, hudPoint);
+                else
+                    e.Graphics.DrawString("Universe Type: Toroidal", DefaultFont, hudBrush, hudPoint);
+                hudPoint.Y = gridPanel.Height / 20 * 19;
+                e.Graphics.DrawString("UniverseSize: ( " + xSize + ", " + ySize + " )", DefaultFont, hudBrush, hudPoint);
+
+            }
             tssCells.Text = "Cells: " + cellCount;
 
             gridPen.Dispose();
         }
-        //End drawing function
-
-
 
         //Pressing either new button will run the new function resetting everything but the generations text
         private void newToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -271,8 +263,6 @@ namespace MainGame
             tssGenerationsNum.Text = "Generations: " + Generations;
             gridPanel.Invalidate();
         }
-        //End of new button code
-
 
         //Clicking play
         private void tsbPlay_Click(object sender, EventArgs e)
@@ -287,17 +277,11 @@ namespace MainGame
         {
             timer.Start();
         }
-
         private bool global = true;
-
 
         //Mouse clicking code
         //Making it so you can drago to turn cells on
         //Clicking a cell will change it
-        private void GridPanel_MouseClick(object sender, MouseEventArgs e)
-        {
-        }
-
         private void gridPanel_MouseMove(object sender, MouseEventArgs e)
         {
             float width = (float)gridPanel.ClientSize.Width / universe.GetLength(0);
@@ -336,8 +320,6 @@ namespace MainGame
                 gridPanel.Invalidate();
             }
         }
-
-
         //End of mouse clicking and dragging code
 
 
@@ -533,8 +515,6 @@ namespace MainGame
             }
         }
 
-
-
         //Resets the neighbors so they don't keep counting everytime a new cell is made
         public void resetNeighbors()
         {
@@ -547,6 +527,7 @@ namespace MainGame
             }
         }
 
+        //Pausing or stopping the generations
         private void tsbPause_Click(object sender, EventArgs e)
         {
             timer.Stop();
@@ -560,12 +541,13 @@ namespace MainGame
             timer.Stop();
         }
 
-
+        //Exit button
         private void tsmExit_Click_1(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        //Next functions
         private void tsbNext_Click(object sender, EventArgs e)
         {
             NextGeneration();
@@ -578,7 +560,19 @@ namespace MainGame
         {
             NextGeneration();
         }
+        private void nextToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunTo run = new RunTo();
+            run.runNumber = Generations - 1;
 
+            if (DialogResult.OK == run.ShowDialog())
+            {
+                for (int i = Generations; i < run.runNumber; i++)
+                    NextGeneration();
+            }
+        }
+
+        //Toggling the grid
         private void viewGrid_Click(object sender, EventArgs e)
         {
             toggleGrid();
@@ -602,6 +596,7 @@ namespace MainGame
             gridPanel.Invalidate();
         }
 
+        //Toggling neighbor counts
         private void viewNeighbor_Click(object sender, EventArgs e)
         {
             toggleNeighborCount();
@@ -626,7 +621,16 @@ namespace MainGame
             gridPanel.Invalidate();
         }
 
+        //Changing HUD
         private void viewHUD_Click(object sender, EventArgs e)
+        {
+            toggleHUD();
+        }
+        private void hUDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toggleHUD();
+        }
+        private void toggleHUD()
         {
             if (viewHUD.Checked)
                 viewHUD.Checked = false;
@@ -636,6 +640,7 @@ namespace MainGame
             gridPanel.Invalidate();
         }
 
+        //Opening the options menu
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             
@@ -661,6 +666,7 @@ namespace MainGame
             gridPanel.Invalidate();
         }
 
+        //Randomize 3 different ways
         private void fromTimeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PressNewButton();
@@ -704,6 +710,7 @@ namespace MainGame
             gridPanel.Invalidate();
         }
 
+        //Opening a file
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFile();
@@ -714,7 +721,7 @@ namespace MainGame
         }
         private void openFile()
         {
-            OpenFileDialog dlg = new OpenFileDialog();
+            
             dlg.Filter = "All Files|*.*|Cells|*.cells";
             dlg.FilterIndex = 2;
 
@@ -768,9 +775,73 @@ namespace MainGame
 
                 }
                 reader.Close();
+                gridPanel.Invalidate();
             }
         }
 
+        //Importing a universe
+        private void tsmiImport_Click(object sender, EventArgs e)
+        {
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2;
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                StreamReader reader = new StreamReader(dlg.FileName);
+
+                int fileWidth = 0;
+                int fileHeight = 0;
+
+                //Getting the size of the universe
+                while (!reader.EndOfStream)
+                {
+                    string row = reader.ReadLine();
+
+                    if (row[0] != '!')
+                    {
+                        fileHeight++;
+                        fileWidth = row.Length;
+                    }
+                }
+                if (fileHeight > ySize || fileWidth > xSize)
+                {
+                    universe = new Cells[fileWidth, fileHeight];
+                    for (int y = 0; y < fileHeight; y++)
+                    {
+                        for (int x = 0; x < fileWidth; x++)
+                        {
+                            universe[x, y] = new Cells();
+                        }
+                    }
+                }
+
+                reader.BaseStream.Seek(0, SeekOrigin.Begin);
+
+                // Reading cells
+                int rowNum = 0;
+                while (!reader.EndOfStream)
+                {
+                    string row = reader.ReadLine();
+
+                    if (row[0] != '!')
+                    {
+                        for (int xPos = 0; xPos < row.Length; xPos++)
+                        {
+                            if (row[xPos] == '0')
+                                universe[xPos, rowNum].setAliveTrue();
+                            else if (row[xPos] == '.')
+                                universe[xPos, rowNum].setAliveFalse();
+                        }
+                        rowNum++;
+                    }
+
+                }
+                reader.Close();
+                gridPanel.Invalidate();
+            }
+        }
+    
+        //Saving a file
         private void saveToolStripButton_Click(object sender, EventArgs e)
         {
             saveFile();
@@ -807,31 +878,9 @@ namespace MainGame
             }
         }
 
-        private void nextToToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RunTo run = new RunTo();
-            run.runNumber = Generations - 1;
-
-            if (DialogResult.OK == run.ShowDialog())
-            {
-                for (int i = Generations; i < run.runNumber; i++)
-                    NextGeneration();
-            }
-        }
-
+        //Saving the options when you close
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            /*
-             * Properties.Settings.Default.TimeGap = opt.milTimer;
-            Properties.Settings.Default.xAxisSize = opt.xAxis;
-            Properties.Settings.Default.yAxisSize = opt.yAxis;
-            Properties.Settings.Default.GridLinesColor = opt.gridColors;
-            Properties.Settings.Default.GridBackground = opt.backgroundColors;
-            Properties.Settings.Default.AliveCellColor = opt.cellColors;
-            Properties.Settings.Default.universeType = universeFinite;
-            Properties.Settings.Default.Save();
-            */
-
             Properties.Settings.Default.TimeGap = timer.Interval;
             Properties.Settings.Default.xAxisSize = xSize;
             Properties.Settings.Default.yAxisSize = ySize;
@@ -841,5 +890,33 @@ namespace MainGame
             Properties.Settings.Default.universeType = universeFinite;
             Properties.Settings.Default.Save();
         }
+
+        //Reset and reload
+        private void settoolReset_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Reset();
+            loadSettings();
+            CreateUniverse();
+            gridPanel.Invalidate();
+        }
+
+        //clicking the reload button
+        private void settoolsReload_Click(object sender, EventArgs e)
+        {
+            loadSettings();
+            gridPanel.Invalidate();
+        }
+
+        //function for loading setting to save code
+        private void loadSettings()
+        {
+            timer.Interval = Properties.Settings.Default.TimeGap;
+            xSize = Properties.Settings.Default.xAxisSize;
+            ySize = Properties.Settings.Default.yAxisSize;
+            gridColor = Properties.Settings.Default.GridLinesColor;
+            gridPanel.BackColor = Properties.Settings.Default.GridBackground;
+            cellColor = Properties.Settings.Default.AliveCellColor;
+            universeFinite = Properties.Settings.Default.universeType;
+        }        
     }
 }
