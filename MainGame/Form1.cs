@@ -633,9 +633,15 @@ namespace MainGame
         private void toggleHUD()
         {
             if (viewHUD.Checked)
+            {
+                hUDToolStripMenuItem.Checked = false;
                 viewHUD.Checked = false;
+            }
             else
+            {
+                hUDToolStripMenuItem.Checked = true;
                 viewHUD.Checked = true;
+            }
 
             gridPanel.Invalidate();
         }
